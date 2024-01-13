@@ -1,0 +1,16 @@
+    $('.select2').select2({
+      templateResult: formatState,
+      templateSelection: formatState
+    });
+
+    function formatState (opt) {
+      var optimage = $(opt.element).attr('data-image'); 
+      if(!optimage){
+      return opt.text;
+      } else {                    
+          var $opt = $(
+          '<span><img src="' + optimage + '" width="18px" /> ' + opt.text + '</span>'
+          );
+          return $opt;
+      }
+    };

@@ -1,0 +1,161 @@
+mixin form(data={})
+  form#form-book(method='POST', action=(`/admin/book/${data.id ? 'edit/'+data.id : 'add'}`), role='form')
+    if (data.id)
+      input(type='hidden' name='id', value=data.id)
+    .col-lg-12.col-md-12
+      .form-group(class=errors && errors.desc && 'has-error')
+        label.control-label categoryId:
+        .input-data-block
+          input.form-control(name='categoryId' type='text' value=(data.categoryId ? data.categoryId : '') placeholder='categoryId')
+
+
+    .col-lg-12.col-md-12
+      .form-group(class=errors && errors.desc && 'has-error')
+        label.control-label name:
+        .input-data-block
+          input.form-control(name='name' type='text' value=(data.name ? data.name : '') placeholder='name')
+
+
+    .col-lg-12.col-md-12
+      .form-group(class=errors && errors.desc && 'has-error')
+        label.control-label slug:
+        .input-data-block
+          input.form-control(name='slug' type='text' value=(data.slug ? data.slug : '') placeholder='slug')
+
+
+    .col-lg-12.col-md-12
+      .form-group(class=errors && errors.desc && 'has-error')
+        label.control-label author:
+        .input-data-block
+          input.form-control(name='author' type='text' value=(data.author ? data.author : '') placeholder='author')
+
+
+    .col-lg-12.col-md-12
+      .form-group(class=errors && errors.desc && 'has-error')
+        label.control-label resource:
+        .input-data-block
+          input.form-control(name='resource' type='text' value=(data.resource ? data.resource : '') placeholder='resource')
+
+
+    .col-lg-12.col-md-12
+      .form-group(class=errors && errors.desc && 'has-error')
+        label.control-label origin:
+        .input-data-block
+          input.form-control(name='origin' type='text' value=(data.origin ? data.origin : '') placeholder='origin')
+
+
+    .col-lg-12.col-md-12
+      .form-group(class=errors && errors.desc && 'has-error')
+        label.control-label name:
+        .input-data-block
+          input.form-control(name='categoryListString' type='text' value=(data.categoryListString ? data.categoryListString : '') placeholder='categoryListString')
+
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label position:
+        input.form-control(name='position' type='text' value=(data.position ? data.position : '') placeholder='position')
+
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label totalPage:
+        input.form-control(name='totalPage' type='text' value=(data.totalPage ? data.totalPage : '') placeholder='totalPage')
+
+
+    .col-lg-12.col-md-12
+      .form-group(class=errors && errors.desc && 'has-error')
+        label.control-label link:
+        .input-data-block
+          input.form-control(name='link' type='text' value=(data.link ? data.link : '') placeholder='link')
+
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label adsScript:
+        input.form-control(name='adsScript' type='text' value=(data.adsScript ? data.adsScript : '') placeholder='adsScript')
+
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label state:
+        select.select2.form-control(name='state' autocomplete="off")
+            option(value='STRING(64' data-image='' selected=data.state===''?true:false) STRING(64
+
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label flag:
+        select.select2.form-control(name='flag' multiple=true)
+            option(value='STRING(64' data-image='' selected=data.flag===''?true:false) STRING(64
+
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label icon:
+        .row#wrap-upload-icon
+        a.btn.btn-default#render-icon(href='javascript:;' onclick="initUploadAws('icon')") Choose image &nbsp;
+          i.fa.fa-image
+
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label images:
+        .row#wrap-upload-images
+        a.btn.btn-default#render-images(href='javascript:;' onclick="initUploadAws('images', '', 'true')") Choose image &nbsp;
+          i.fa.fa-image
+
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label genre:
+        input.form-control(name='genre' type='text' value=(data.genre ? data.genre : '') placeholder='genre')
+
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label shortDescription:
+        input.form-control(name='shortDescription' type='text' value=(data.shortDescription ? data.shortDescription : '') placeholder='shortDescription')
+
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label description:
+        textarea.summernote(name='desc')
+
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label adsScript:
+        input.form-control(name='adsScript' type='text' value=(data.adsScript ? data.adsScript : '') placeholder='adsScript')
+
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label view:
+        input.form-control(name='view' type='text' value=(data.view ? data.view : '') placeholder='view')
+
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label rate:
+        input.form-control(name='rate' type='text' value=(data.rate ? data.rate : '') placeholder='rate')
+
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label status:
+        select.select2.form-control(name='status' autocomplete="off")
+            option(value='on' data-image='' selected=data.status===''?true:false) on
+            option(value=' review' data-image='' selected=data.status===''?true:false)  review
+            option(value=' off' data-image='' selected=data.status===''?true:false)  off
+
+
+    .col-lg-12.col-md-12
+      .form-group
+        button.btn.btn-success
+          i.fa.fa-check
+          |  Submit
+    include ../../layouts/modal-upload
+  include _validation
+  include _jsformload

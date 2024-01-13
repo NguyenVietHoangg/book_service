@@ -1,0 +1,22 @@
+mixin form(data={})
+  form#form-add-story(method='POST', action=(`/admin/story/add`), role='form')
+    .col-lg-12.col-md-12
+      .form-group(class=errors && errors.desc && 'has-error')
+        label.control-label Tiêu đề:
+        .input-data-block
+          input.form-control(name='name' type='text' value=(data.name ? data.name : '') placeholder='Điền tiêu đề bài viết')
+    .col-lg-12.col-md-12(style='display: none')
+      .form-group
+        label.control-label Trạng thái:
+        select.select2.form-control(name='status' autocomplete="off")
+          option(value='off' data-image='' selected=data.status==='off'?true:false)  Tắt
+   
+    .col-lg-12.col-md-12(style="margin-top: 20px")
+      .form-group.right
+        button.btn.btn-success
+          |  Tạo bản ghi
+    include ../../layouts/modal-upload
+  script.
+    var suggestList = !{data.suggestListToString ? data.suggestListToString : '[]'};
+  include _validation
+  include _jsformload

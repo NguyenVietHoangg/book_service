@@ -1,0 +1,70 @@
+mixin form(data={})
+  form#form-tag(method='POST', action=(`/admin/tag/${data.id ? 'edit/'+data.id : 'add'}`), role='form')
+    if (data.id)
+      input(type='hidden' name='id', value=data.id)
+    .col-lg-12.col-md-12
+      .form-group(class=errors && errors.desc && 'has-error')
+        label.control-label name:
+        .input-data-block
+          input.form-control(name='name' type='text' value=(data.name ? data.name : '') placeholder='name')
+
+    .hidden(style='display: none')
+      //- .col-lg-12.col-md-12
+      //-   .form-group(class=errors && errors.desc && 'has-error')
+      //-     label.control-label slug:
+      //-     .input-data-block
+      //-       input.form-control(name='slug' type='text' value=(data.slug ? data.slug : '') placeholder='slug')
+
+
+      .col-lg-12.col-md-12
+        .form-group
+          label.control-label isStory:
+          input.minimal(type='checkbox' checked=(data.isStory || data.isStory === 1) name='isStory' value='1')
+
+
+      .col-lg-12.col-md-12
+        .form-group
+          label.control-label link:
+          input.minimal(type='checkbox' checked=(data.link || data.link === 1) name='link' value='1')
+
+
+      .col-lg-12.col-md-12
+        .form-group
+          label.control-label position:
+          input.form-control(name='position' type='text' value=(data.position ? data.position : '') placeholder='position')
+
+
+      .col-lg-12.col-md-12
+        .form-group
+          label.control-label adsScript:
+          input.form-control(name='adsScript' type='text' value=(data.adsScript ? data.adsScript : '') placeholder='adsScript')
+
+
+      .col-lg-12.col-md-12
+        .form-group
+          label.control-label flag:
+          select.select2.form-control(name='flag' multiple=true)
+              option(value='STRING(64' data-image='' selected=data.flag===''?true:false) STRING(64
+
+
+      //- .col-lg-12.col-md-12
+      //-   .form-group
+      //-     label.control-label view:
+      //-     input.form-control(name='view' type='text' value=(data.view ? data.view : '') placeholder='view')
+
+
+      .col-lg-12.col-md-12
+        .form-group
+          label.control-label status:
+          select.select2.form-control(name='status' autocomplete="off")
+              option(value='on' data-image='' selected=data.status===''?true:false) on
+              option(value='off' data-image='' selected=data.status===''?true:false)  off
+
+    .col-lg-12.col-md-12
+      .form-group
+        button.btn.btn-success
+          i.fa.fa-check
+          |  Submit
+    include ../../layouts/modal-upload
+  include _validation
+  include _jsformload

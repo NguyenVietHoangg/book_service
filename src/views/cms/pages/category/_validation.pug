@@ -1,0 +1,30 @@
+block content
+  script(type='text/javascript').
+    $(function () {
+    // phần này sẽ là validation cơ bản cho các input của form
+    $( "#form-category" ).validate({
+        rules: {
+        name: {required: true},
+          slug: {required: true}
+        },
+        messages: {
+        name: 'Please enter name',
+          slug: 'Please enter slug'
+        },
+        errorElement: "em",
+        errorPlacement: function ( error, element ) {
+          error.addClass( "help-block" );
+          if ( element.prop( "type" ) === "checkbox" ) {
+            error.insertAfter( element.parent( "label" ) );
+          } else {
+            error.insertAfter( element );
+          }
+        },
+        highlight: function ( element, errorClass, validClass ) {
+          $( element ).parents( ".input-data-block" ).addClass( "has-error" ).removeClass( "has-success" );
+        },
+        unhighlight: function (element, errorClass, validClass) {
+          $( element ).parents( ".input-data-block" ).addClass( "has-success" ).removeClass( "has-error" );
+        }
+      });
+    })

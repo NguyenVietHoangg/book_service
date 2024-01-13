@@ -1,0 +1,83 @@
+mixin form(data={})
+  form#form-category(method='POST', action=(`/admin/category/${data.id ? 'edit/'+data.id : 'add'}`), role='form')
+    if (data.id)
+      input(type='hidden' name='id', value=data.id)
+    .col-lg-12.col-md-12
+      .form-group(class=errors && errors.desc && 'has-error')
+        label.control-label Tên thể loại:
+        .input-data-block
+          input.form-control(name='name' type='text' value=(data.name ? data.name : '') placeholder='Điền tên thể loại')
+    
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label Loại:
+        select.select2.form-control#type_value(name='type' autocomplete="off" onchange="changeType()" disabled=!data.id ? false : (data && data.parentId == null && listCates.length && !showChildren) ? true: false)
+            option(value='main' data-image='' selected=!data.parentId?true:false) Chính
+            option(value='sub' data-image='' selected=!data.id? true: data.parentId?true:false) Danh mục con
+    
+    -if (listCates && listCates.length) {
+      .col-lg-12.col-md-12.cate-list-main(style=data && !showChildren ? 'display: block' : 'display: none')
+        .form-group
+        -if (data.id && (data.parentId == null) && !showChildren) {
+          label.control-label Danh sách danh mục con:
+          <br />
+          each cate in listCates
+            input.minimal(type='checkbox' checked=true name='childrenId' value=cate.id)
+            | &nbsp; #{cate.name} &nbsp;
+            input(type='hidden' name='fullChildsId' value=cate.id)
+        -} else {
+          label.control-label Thuộc danh mục chính:
+          select.select2.form-control#type_value(name='parentId' autocomplete="off" onchange="changeType()")
+            each cate in listCates
+              option(value=cate.id data-image='' selected=data && data.parentId===cate.id ?true:false) !{cate.name}
+        - }
+    -}
+
+    .col-lg-12.col-md-12
+      .form-group(class=errors && errors.desc && 'has-error')
+        label.control-label slug:
+        .input-data-block
+          input.form-control(name='slug' type='text' value=(data.slug ? data.slug : '') placeholder='slug')
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label(title="SEO - tiêu đề ") Cài đặt SEO - Tiêu đề :
+        .input-data-block
+          input.form-control(name='seoTitle' type='text' value=(data.seoTitle ? data.seoTitle : '') placeholder='Seo tiêu đề')
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label(title="SEO - mô tả") Cài đặt SEO - Mô tả:
+        .input-data-block
+          input.form-control(name='seoDesc' type='text' value=(data.seoDesc ? data.seoDesc : '') placeholder='Seo mô tả')
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label(title="SEO - từ khóa") Cài đặt SEO - Từ khóa (keywords):
+        .input-data-block
+          input.form-control(name='seoKeywords' type='text' value=(data.seoKeywords ? data.seoKeywords : '') placeholder='Seo từ khóa')
+    .col-lg-12.col-md-12
+      .form-group(class=errors && errors.desc && 'has-error')
+        label.control-label Mô tả ngắn:
+        .input-data-block
+          input.form-control(name='shortDescription' type='text' value=(data.shortDescription ? data.shortDescription : '') placeholder='shortDescription')
+
+    .col-lg-12.col-md-12
+        .form-group
+          label.control-label Ảnh đại diện:
+          .row#wrap-upload-images
+          a.btn.btn-default#render-images(href='javascript:;' onclick="initUploadAws('images')") Choose image &nbsp;
+            i.fa.fa-image
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label Trạng thái:
+        select.select2.form-control(name='status' autocomplete="off")
+            option(value='on' data-image='' selected=data.status===''?true:false) Hoạt động
+            option(value='off' data-image='' selected=data.status===''?true:false)  Tắt
+
+    .col-lg-12.col-md-12
+      .form-group
+        button.btn.btn-success
+          i.fa.fa-check
+          |  Submit
+    include ../../layouts/modal-upload
+  include _validation
+  include _jsformload

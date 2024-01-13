@@ -1,0 +1,27 @@
+// format active: {parent: 'Setting', child: child}}
+//- - var admin_type = global.sessionAdmin.type
+aside.main-sidebar
+  section.sidebar
+    ul.sidebar-menu(data-widget='tree')
+      li.header MENU
+      - var admin_type = global.sessionAdmin ? global.sessionAdmin.type : 'admin'
+      each val, index in menuCms
+        - if (!val.text.includes(admin_type))
+          - continue
+        li(class=(active && active.child && active.parent === val.title ? 'treeview active menu-open' : val.children ? 'treeview' : !val.children && active && active.parent === val.title ? 'active' : ''))
+          a(href=val.children ? '/#' : val.href)
+            - var color = global.configGlobal.colors[index]
+            i(class=(val.children ? 'fa fa-folder-o' : 'fa fa-laptop') style="color: "+color)
+            span #{val.title}
+            if (val.children)
+              span.pull-right-container
+                i.fa.fa-angle-left.pull-right
+          if (val.children)
+            ul.treeview-menu
+              each v, i in val.children
+                - if (!v.text.includes(admin_type))
+                  - continue
+                li(class=(active && active.child && active.child === v.title ? 'active' : ''))
+                  a(href=v.href)
+                    i.fa.fa-minus
+                    span #{v.title}

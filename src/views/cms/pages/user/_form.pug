@@ -1,0 +1,84 @@
+mixin form(data={})
+  form#form-user(method='POST', action=(`/admin/user/${data.id ? 'edit/'+data.id : 'add'}`), role='form')
+    if (data.id)
+      input#id(type='hidden' name='id', value=data.id)
+    .col-lg-12.col-md-12
+      .form-group(class=errors && errors.desc && 'has-error')
+        label.control-label Tên:
+        .input-data-block
+          input.form-control(name='fullName' type='text' value=(data.fullName ? data.fullName : '') placeholder='fullName' disabled)
+
+    .col-lg-12.col-md-12
+      .form-group(class=errors && errors.desc && 'has-error')
+        label.control-label Email:
+        .input-data-block
+          input.form-control(name='email' type='text' value=(data.email ? data.email : '') placeholder='email' disabled)
+
+    .col-lg-12.col-md-12
+      .form-group(class=errors && errors.desc && 'has-error')
+        label.control-label Số điện thoại:
+        .input-data-block
+          input.form-control(name='phone' type='text' value=(data.phone ? data.phone : '') placeholder='phone' disabled)
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label Thành phố:
+        select.select2.form-control(name='cityId' autocomplete="off" disabled)
+            option(value='0' data-image='' selected=data.cityId===0?true:false) mặc định
+            option(value='1' data-image='' selected=data.cityId===1?true:false) giá trị 1
+            option(value='2' data-image='' selected=data.cityId===2?true:false) giá trị 2
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label Phường:
+        select.select2.form-control(name='communeId' autocomplete="off" disabled)
+            option(value='0' data-image='' selected=data.communeId===0?true:false) mặc định
+            option(value='1' data-image='' selected=data.communeId===1?true:false) giá trị 1
+            option(value='2' data-image='' selected=data.communeId===2?true:false) giá trị 2
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label Quận:
+        select.select2.form-control(name='districtId' autocomplete="off" disabled)
+            option(value='0' data-image='' selected=data.districtId===0?true:false) mặc định
+            option(value='1' data-image='' selected=data.districtId===1?true:false) giá trị 1
+            option(value='2' data-image='' selected=data.districtId===2?true:false) giá trị 2
+
+    .col-lg-12.col-md-12
+      .form-group(class=errors && errors.desc && 'has-error')
+        label.control-label Tên ngân hàng:
+        .input-data-block
+          input.form-control(name='bankName' type='text' value=(data.bankName ? data.bankName : '') placeholder='bankName' disabled)
+
+
+    .col-lg-12.col-md-12
+      .form-group(class=errors && errors.desc && 'has-error')
+        label.control-label Số tài khoản:
+        .input-data-block
+          input.form-control(name='bankAccount' type='text' value=(data.bankAccount ? data.bankAccount : '') placeholder='bankAccount' disabled)
+
+
+    .col-lg-12.col-md-12
+      .form-group(class=errors && errors.desc && 'has-error')
+        label.control-label Tên chủ tài khoản:
+        .input-data-block
+          input.form-control(name='bankAccountName' type='text' value=(data.bankAccountName ? data.bankAccountName : '') placeholder='bankAccountName' disabled)
+
+
+    .col-lg-12.col-md-12
+      .form-group(class=errors && errors.desc && 'has-error')
+        label.control-label Trạng thái:
+        select.select2.form-control#mySelect2(name='status' autocomplete="off")
+            option(value='hoat_dong' data-image='' selected=data.status==='hoat_dong'?true:false) Hoạt động
+            option(value='tam_dung' data-image='' selected=data.status==='tam_dung'?true:false) Tạm dừng
+            option(value='cho_phe_duyet' data-image='' selected=data.status==='cho_phe_duyet'?true:false) Chờ phê duyệt
+            option(value='khoa' data-image='' selected=data.status==='khoa'?true:false) Khóa
+
+    .col-lg-12.col-md-12
+      .form-group
+        button.btn.btn-success
+          i.fa.fa-check
+           | #{data.id ? "Cập nhật" : "Tạo mới"}
+    include ../../layouts/modal-upload
+  include _validation
+  include _jsformload

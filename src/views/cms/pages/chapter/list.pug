@@ -1,0 +1,31 @@
+extends ../../layouts/base
+block title
+  h1 chapter 
+block content
+  .box
+    .box-body
+      .row
+        .col-lg-12.col-md-12
+          .buttons-toolbar
+          #toolbar
+            a.btn.btn-success.button-manager(href='/admin/chapter/add/'+storyid)
+              i.fa.fa-plus
+              |  Create 
+            button#remove_chapter.btn.btn-danger.button-manager(disabled='')
+              i.fa.fa-trash
+              |  Delete 
+            a(href='').btn.btn-default.button-manager
+              i.fa.fa-refresh
+              |  Refresh 
+          .row#box_filter_chapter(style="margin-top: 7px")
+            .col-lg-4.col-md-4
+              label Key search
+              .form-group
+                input#search.form-control(type='text' placeholder='title...' name='keySearch' autocomplete="off")
+          table#table_chapter(data-buttons-toolbar='.buttons-toolbar' data-toolbar-align='unset' data-search='false' data-icons-prefix='fa' data-show-refresh='false' data-show-toggle='false' data-show-columns='true' data-show-export='true' data-detail-view='false' data-detail-formatter='detailFormatter' data-minimum-count-columns='2' data-show-pagination-switch='false' data-pagination='true' data-id-field='id' data-page-list='[30]' data-show-footer='false' data-side-pagination='server' data-url='/admin/chapter/ajax-list'+(storyid ? '/'+storyid : '') data-query-params='queryParams' data-response-handler='responseHandler')
+  script.
+    var storyId = '#{storyid}';
+    var fields = [{"field":"name","title":"name"},{"field":"slugUnique", "title": "slugUnique"}]
+    var urlManager = '/admin/chapter/'+storyId;
+    var setLimitRow = 30;
+  include ./_tablejs

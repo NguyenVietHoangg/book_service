@@ -1,0 +1,355 @@
+mixin form(data={})
+  form#form-story(method='POST', action=(`/admin/story/${data.id ? 'edit/'+data.id : 'add'}`), role='form')
+    - var admin_type = global.sessionAdmin ? global.sessionAdmin.type : 'admin'
+    if (data.id)
+      input(id= 'getidstory' type='hidden' name='id', value=data.id)
+      input(id= 'updatedBy' type='hidden' name='updatedBy', value=data.updatedBy)
+
+    .col-lg-8.col-md-8      
+      .col-lg-12.col-md-12
+        .form-group(class=errors && errors.desc && 'has-error')
+          label.control-label Tiêu đề: !{kuku}
+          .input-data-block
+            input.form-control.getTitle(name='name' type='text' value=(data.name ? data.name : '') placeholder='Điền tiêu đề bài viết')
+
+      .col-lg-9.col-md-9
+        .form-group(class=errors && errors.desc && 'has-error')
+          label.control-label slug:
+          .input-data-block
+            input.form-control.getSlug(name='slug' type='text' value=(data.slug ? data.slug : '') placeholder='slug')
+      
+      .col-lg-3.col-md-3
+        .form-group(class=errors && errors.desc && 'has-error')
+          label.control-label Tác giả (người chỉnh sửa):
+          .input-data-block
+            input.form-control.getAuthor(name='author' type='text' value=(data.author ? data.author : 'MicroKOLs') placeholder='Mặc định là MicroKOLs')
+      
+      .col-lg-1.col-md-1
+        .form-group(class=errors && errors.desc && 'has-error')
+          label.control-label Rate:
+          .input-data-block
+            input.form-control.getRate(name='rate' type='text' value=(data.rate ? data.rate : '8.2') placeholder='rate')
+
+      .col-lg-2.col-md-2
+        .form-group(class=errors && errors.desc && 'has-error')
+          label.control-label State:
+          .input-data-block
+            input.form-control.getState(name='state' type='text' value=(data.state ? data.state : '') placeholder='state')
+
+      .col-lg-9.col-md-9
+        .form-group(class=errors && errors.desc && 'has-error')
+          label.control-label Genre:
+          .input-data-block
+            input.form-control.getGenre(name='genre' type='text' value=(data.genre ? data.genre : '8.2') placeholder='rate')
+
+      .col-lg-9.col-md-9
+        .form-group(class=errors && errors.desc && 'has-error')
+          label.control-label Link nguồn:
+          .input-data-block
+            input.form-control#linknguon(name='source_crawler_1' type='text' value=(data.linkPostTo ? data.linkPostTo : data.source_crawler_1) placeholder='Điền link nguồn nếu có')
+      
+      .col-lg-3.col-md-3
+        .form-group(class=errors && errors.desc && 'has-error')
+          label.control-label Nguồn (tên):
+          .input-data-block
+            input.form-control#nguon(name='origin' type='text' value=(data.origin ? data.origin : '') placeholder='Điền nguồn nếu có')
+
+      .col-lg-12.col-md-12
+        .form-group
+          label.control-label(title="SEO - tiêu đề ") Cài đặt SEO - Tiêu đề :
+          .input-data-block
+            input.form-control(name='seoTitle' type='text' value=(data.seoTitle ? data.seoTitle : '') placeholder='Seo tiêu đề')
+      .col-lg-12.col-md-12
+        .form-group
+          label.control-label(title="SEO - mô tả") Cài đặt SEO - Mô tả:
+          .input-data-block
+            input.form-control(name='seoDesc' type='text' value=(data.seoDesc ? data.seoDesc : '') placeholder='Seo mô tả')
+      .col-lg-12.col-md-12
+        .form-group
+          label.control-label(title="SEO - từ khóa") Cài đặt SEO - Từ khóa (keywords):
+          .input-data-block
+            input.form-control(name='seoKeywords' type='text' value=(data.seoKeywords ? data.seoKeywords : '') placeholder='Seo từ khóa')
+      
+      .col-lg-12.col-md-12
+        .form-group
+          label Cài đặt bài viết liên quan:
+          select#story_relative_search.form-control.select2.getRelative(name="suggest[]" multiple='multiple' data-placeholder='Gõ để tìm kiếm bài viết' style='width: 100%;')
+      
+      .col-lg-12.col-md-12
+        .form-group
+          label Cài đặt tags:
+          select#hashtags.form-control.select2(name="tags[]" multiple='multiple' data-placeholder='Nhập tag' style='width: 100%;' value=data.tags)
+    
+      .col-lg-12.col-md-12
+        .form-group(class=errors && errors.desc && 'has-error')
+          label.control-label Sapo (Mô tả ngắn):
+          .input-data-block
+            textarea.form-control.getSapo(rows=3 name='shortDescription' type='text' value=(data.shortDescription ? data.shortDescription : '') placeholder='Mô tả ngắn')
+              | !{data.shortDescription ? data.shortDescription : ''}
+
+      .col-lg-12.col-md-12
+        .form-group          
+          a(href=DOMAIN_CLIENT +'/'+firstCate+'/'+ data.slug target="_blank" style="font-size: 15px; font-weight:bold") Link public :
+          input.form-control( type='text' disabled value= DOMAIN_CLIENT +'/'+firstCate+'/'+ data.slug)
+
+      .col-lg-12.col-md-12
+        .form-group
+          -if(data.publishedAt)
+            input.minimal(  id='checkPublishedAt' type='hidden' checked=(data.publishedAt) value = data.publishedAt name='checkPublishedAt') 
+          -else
+            input.minimal( id='checkPublishedAt' type='checkbox' checked=(data.publishedAt) value = data.publishedAt name='checkPublishedAt')
+          
+          | &nbsp;          
+          label.control-label Hẹn giờ publish bài viết:
+        .col-lg-6.col-md-6(style="display:none" id='showAndHidePublishedAt')
+          .input-group.date
+            .input-group-addon
+              i.fa.fa-calendar
+            input.datepicker-story.form-control.pull-right( id= 'datepublish' type='text', name='publishedDate' autocomplete="off", value=(publishedDate ? publishedDate : ''))
+        .col-lg-6.col-md-6(style="display:none" id='showAndHidePublishedAt1')
+          .input-group
+            input.form-control.timepicker-story(id ='timepublish' type='text' name='publishedTime' autocomplete="off" value=(publishedTime ? publishedTime : ''))
+            .input-group-addon
+              i.fa.fa-clock-o
+      .col-lg-12.col-md-12(style="margin-top: 20px;")
+        .form-group
+          label.control-label Nội dung bài viết:
+          textarea.summernote.getDescription(name='description') !{data.description ? data.description : data.shortDescription}
+      .col-lg-12.col-md-12(style="margin-top: 20px;")
+        .form-group
+          label.control-label Trạng thái: 
+          span(style=constantConfig.getStatus(data.status).style) !{constantConfig.getStatus(data.status).name}
+      
+
+    .col-lg-4.col-md-4
+      .col-lg-12.col-md-12
+        .form-group
+          label.control-label Ảnh đại diện: 
+          .row#wrap-upload-imageSave
+          a.btn.btn-default#render-imageSave(href='javascript:;' onclick="initUploadAws('imageSave')") Choose image &nbsp;
+            i.fa.fa-image
+      .col-lg-12.col-md-12
+        .form-group
+          label.control-label Thuộc danh mục:
+          //- br
+          -if (categories)  // categories là tất cả category cha + con trong db lôi ra 
+            each cate in categories
+              <br />
+              .inline-block-cate.parent                                                           
+                input.minimal.checkCategory.checkLinkPostTo(id="categoryBig"+cate.id type='checkbox' checked=(data.id && data.categories.includes(cate.id)) name='categoriesParent[]' value=cate.id)
+                input(id="getSlug"+cate.id type='hidden'  value=cate.slug)
+                input(id="getNameCategory"+cate.id type='hidden'  value= cate.name) 
+                input(id="getNameCategoryIndex"+cate.id type='hidden'  value= nameFirstCate)                
+                span(title="Cho vào danh mục "+cate.name) &nbsp; !{cate.name} 
+              .inline-block-cate.children(style=`${admin_type != 'admin' ? 'display: none;' : ''}`)
+                input.minimal.minimalcategory.checkCategory(id='checkChecked'+cate.id type='checkbox' checked=(data.id && data.focuses && data.focuses.includes(cate.id)) name='categoriesFocus[]' value=cate.id)
+                span( id=cate.id title="Cho vào focus của danh mục "+cate.name) &nbsp; Focus
+                -if(focusArrayParent)
+                  -var checkSubcate3 = focusArrayParent.filter(item3 => item3.idCategory == cate.id)
+                  if (checkSubcate3.length)
+                    -var checkSub = checkSubcate3[0].position 
+                    input(id="focus"+cate.id type='hidden' name='categoriesFocusAndPosition[]' value=cate.id+'|'+checkSubcate3[0].position +'|'+ 'focus') 
+                    span(id="spanfocus"+cate.id style="color:red") #{checkSub != 0 && checkSub != null ? '('+ checkSubcate3[0].position +')' : '' }                   
+
+                  else 
+                    input(id="focus"+cate.id type='hidden' name='categoriesFocusAndPosition[]' value=cate.id+'|'+ '' +'|'+ 'focus')
+                    span(id="spanfocus"+cate.id style="color:red")  
+
+              .inline-block-cate.children(style=`${admin_type != 'admin' ? 'display: none;' : ''}`)
+                input.minimal.minimalcategory.checkCategory(id='checkChecked'+cate.id type='checkbox' checked=(data.id && data.slides && data.slides.includes(cate.id)) name='categoriesSlide[]' value=cate.id)
+                span(id=cate.id title="Cho vào slide của danh mục "+cate.name) &nbsp; Slide
+                -if(slideArrayParent)
+                  -var checkSubcate1 = slideArrayParent.filter(item1 => item1.idCategory == cate.id)
+                  if (checkSubcate1.length) 
+                    -var checkSub1 = checkSubcate1[0].position 
+                    input(id="slide"+cate.id name='categoriesSlideAndPosition[]' type='hidden' value=cate.id+'|'+checkSubcate1[0].position +'|'+ 'slide') 
+                    span(id="spanslide"+cate.id style="color:red") #{checkSub1 != 0 && checkSub1 != null ? '('+ checkSubcate1[0].position +')' : '' }
+                  else 
+                    input(id="slide"+cate.id name='categoriesSlideAndPosition[]' type='hidden' value=cate.id+'|'+'' +'|'+ 'slide') 
+                    span(id="spanslide"+cate.id style="color:red") 
+
+              .inline-block-cate.children(style=`${admin_type != 'admin' ? 'display: none;' : ''}`)
+                input.minimal.minimalcategory.checkCategory(id='checkChecked'+cate.id type='checkbox' checked=(data.id && data.news && data.news.includes(cate.id)) name='categoriesNew[]' value=cate.id)
+                span(id=cate.id title="Cho vào new của danh mục "+cate.name) &nbsp; New
+                -if(newArrayParent)
+                  -var checkSubcate2 = newArrayParent.filter(item2 => item2.idCategory == cate.id)
+                  if (checkSubcate2.length) 
+                    -var checkSub2 = checkSubcate2[0].position 
+                    input(id="new"+cate.id name='categoriesNewAndPosition[]' type='hidden' value=cate.id+'|'+checkSubcate2[0].position +'|'+ 'new') 
+                    span(id="spannew"+cate.id style="color:red") #{checkSub2 != 0 && checkSub2 != null ? '('+ checkSubcate2[0].position +')' : '' }
+                  else 
+                    input(id="new"+cate.id name='categoriesNewAndPosition[]' type='hidden' value=cate.id+'|'+ '' +'|'+ 'new') 
+                    span(id="spannew"+cate.id style="color:red") 
+
+
+
+              if (cate.subcategories1 && cate.subcategories1.length) 
+                each subcate in cate.subcategories1
+                  <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  .inline-block-cate
+                    input.minimal.input-subcategory.checkCategory.checkLinkPostTo(id="categoryBig"+subcate.id type='checkbox' checked=(data.id && data.categories.includes(subcate.id)) name='categoriesChildren[]' value=cate.id+'|'+subcate.id) 
+                    span( title="Cho vào danh mục "+subcate.name) &nbsp; !{subcate.name}                    
+                  .inline-block-cate.children(style=`${admin_type != 'admin' ? 'display: none;' : ''}`)
+                    input.minimal.input-subcategory.minimalcategory.checkCategory(id='checkChecked'+subcate.id type='checkbox' title='Cho vào tiêu điểm' checked=(data.id && data.slides && data.focuses.includes(subcate.id))  name='categoriesFocus[]' value=subcate.id)                    
+                    span( id=subcate.id title="Cho vào focus của danh mục "+subcate.name) &nbsp; Focus
+                    -if(focusArray)
+                      -var checkSubcate = focusArray.filter(item => item.idCategory == subcate.id)
+                      if (checkSubcate.length) 
+                        -var checkSub3 = checkSubcate[0].position 
+                        input(id="focus"+subcate.id type='hidden' name='categoriesFocusAndPosition[]' value=subcate.id+'|'+checkSubcate[0].position +'|'+ 'focus') 
+                        span(id="spanfocus"+subcate.id style="color:red") #{checkSub3 != 0  && checkSub3 != null? '('+checkSubcate[0].position +')' : '' } 
+                      else 
+                        input(id="focus"+subcate.id type='hidden' name='categoriesFocusAndPosition[]' value=subcate.id+'|'+ '' +'|'+ 'focus')
+                        span(id="spanfocus"+subcate.id style="color:red") 
+                         
+                  .inline-block-cate.children(style=`${admin_type != 'admin' ? 'display: none;' : ''}`)
+                    input.minimal.input-subcategory.minimalcategory.checkCategory(id='checkChecked'+subcate.id type='checkbox' title='Cho vào slide' checked=(data.id && data.slides && data.slides.includes(subcate.id)) name='categoriesSlide[]' value=subcate.id) 
+                    span( id=subcate.id title="Cho vào slide của danh mục "+subcate.name) &nbsp; Slide
+                    -if(slideArray)
+                      -var checkSubcate1 = slideArray.filter(item1 => item1.idCategory == subcate.id)
+                      if (checkSubcate1.length) 
+                       -var checkSub4 = checkSubcate1[0].position 
+                        input(id="slide"+subcate.id name='categoriesSlideAndPosition[]' type='hidden' value=subcate.id+'|'+checkSubcate1[0].position +'|'+ 'slide') 
+                        span(id="spanslide"+subcate.id style="color:red") #{checkSub4 != 0 && checkSub4 != null ? '('+ checkSubcate1[0].position +')' : '' } 
+                      else 
+                        input(id="slide"+subcate.id name='categoriesSlideAndPosition[]' type='hidden' value=subcate.id+'|'+'' +'|'+ 'slide') 
+                        span(id="spanslide"+subcate.id style="color:red") 
+
+                  .inline-block-cate.children(style=`${admin_type != 'admin' ? 'display: none;' : ''}`)
+                    input.minimal.input-subcategory.minimalcategory.checkCategory(id='checkChecked'+subcate.id type='checkbox' title='Cho vào slide' checked=(data.id && data.news && data.news.includes(subcate.id)) name='categoriesNew[]' value=subcate.id) 
+                    span( id=subcate.id title="Cho vào new của danh mục "+subcate.name) &nbsp; New
+                    -if(newArray)
+                      -var checkSubcate2 = newArray.filter(item2 => item2.idCategory == subcate.id)
+                      if (checkSubcate2.length) 
+                       -var checkSub5 = checkSubcate2[0].position 
+                        input(id="new"+subcate.id name='categoriesNewAndPosition[]' type='hidden' value=subcate.id+'|'+checkSubcate2[0].position +'|'+ 'new') 
+                        span(id="spannew"+subcate.id style="color:red") #{checkSub5 != 0 && checkSub5 != null ?  '('+ checkSubcate2[0].position +')' : '' }
+                      else 
+                        input(id="new"+subcate.id name='categoriesNewAndPosition[]' type='hidden' value=subcate.id+'|'+'' +'|'+ 'new') 
+                        span(id="spannew"+subcate.id style="color:red") 
+              <br />
+      .col-lg-12.col-md-12
+        .form-group(style=`${admin_type != 'admin' ? 'display: none;' : ''}`)
+          label.control-label Thuộc bộ sưu tập:      
+          -if (collections)
+            each cols in collections  
+              br  
+              br         
+              input.minimal.minimalcollection(type='checkbox' id="checkbox"+cols.id checked=(data.id && data.collections.includes(cols.id)) name='collections[]' value=cols.id + '|' + cols.position )              
+              span  #{cols.name}
+              -if(cols.position)               
+                span(id="span"+cols.id style="color:red") #{cols.position != 0? '('+ cols.position  +')' : '' } 
+              -else
+                span(id="span"+cols.id style="color:red")
+        .col-lg-12.col-md-12
+          .row
+            label Seo Emoij Icons
+          .col-lg-6.col-md-6
+            .form-group
+              label.control-label ⚡ _lightning_1_
+            .form-group
+              label.control-label 🌩️ _lightning_2_
+            .form-group
+              label.control-label <span style="color: green;">✔</span> _mark_1_
+            .form-group
+              label.control-label ☑️ _mark_2_
+            .form-group
+              label.control-label 👆 _hand_up_
+            .form-group
+              label.control-label 👇 _hand_down_
+            .form-group
+              label.control-label ⭐ _star_1_
+            .form-group
+              label.control-label 🌟 _star_2_
+            .form-group
+              label.control-label 😎 _cool_1_
+            .form-group
+              label.control-label 🥺 _sad_1_
+            .form-group
+              label.control-label 🥰 _love_1_
+          .col-lg-6.col-md-6
+            .form-group
+              label.control-label 💞 _love_2_
+            .form-group
+              label.control-label 💚 _love_3_
+            .form-group
+              label.control-label 💖 _love_4_
+            .form-group
+              label.control-label 📗 _book_1_
+            .form-group
+              label.control-label 📙 _book_2_
+            .form-group
+              label.control-label 📕 _book_3_
+            .form-group
+              label.control-label 📖 _book_4_
+            .form-group
+              label.control-label 🔖 _bookmark_
+            .form-group
+              label.control-label 🌱 _tree_1_
+            .form-group
+              label.control-label 🌳 _tree_2_
+            .form-group
+              label.control-label 💯 _100_100_
+    .col-lg-12.col-md-12.anchor-button 
+      .form-group.right
+        button.btn.btn-success.btncheckCategory
+          |  Submit
+        a.btn.btn-warning.btnPreview(href="https://truyenfullonline.com/story/"+data.slug+'?preview_a_story=preview_a_story' target="_blank" style="margin-left: 20px;")
+          |  Xem trước
+        a.btn.btn-default(style="margin-left: 20px;" href="/admin/story")
+          | Hủy bỏ
+    include ../../layouts/modal-upload 
+    -if (admin_type == 'admin')
+      include ./model_collection_position
+      include ./model_category_position
+  script.    
+    var suggestList = !{data.suggestListToString ? data.suggestListToString : '[]'};
+    var hashtags = !{data.tags ? data.tags : '[]'};
+    var x = $("#checkPublishedAt").val()    
+    
+    if (x.length > 5){
+      document.getElementById('showAndHidePublishedAt').style.display = 'block';
+      document.getElementById('showAndHidePublishedAt1').style.display = 'block';
+    }
+    else{
+      document.getElementById('showAndHidePublishedAt').style.display = 'none';
+      document.getElementById('showAndHidePublishedAt1').style.display = 'none';
+    } 
+      // link nguồn + nguồn giống tích chọn 
+      let inputText = document.querySelectorAll(".daysang")           
+      for (j = 0; j < inputText.length; j++){
+        if(inputText[j].checked == true){
+          let nameNguon = inputText[j].defaultValue.split('|')[1]
+          let idInputLinkNguon = inputText[j].defaultValue.split('|')[0]
+          let valueText = $('#'+idInputLinkNguon).val()
+          //- $('#linknguon').val(valueText)
+          //- $('#nguon').val(idInputLinkNguon)
+          $('.linkPostButton').attr("href",valueText)
+        }           
+        
+      }  
+    $('.daysang').on('ifChanged', function(){      
+       let l = this.value.split("|")[0]
+       let linkTong = $('#saveLinkTong').val()                  
+       if(this.checked) {
+        let idInput = this.id.split('daysang')[1]        
+        let formart = this.value.split('|')[1]
+        // daysangdoanhnhanvn
+        let id = this.id     
+        let valueNguon = id.split('daysang')[1] 
+        if(linkTong){
+          $('#'+idInput).val(formart +'/'+linkTong)         
+        }
+        let valueLinkChecked = $('#'+idInput).val()
+        $('#linknguon').val(valueLinkChecked)
+        $('#nguon').val(valueNguon)          
+        $('.linkPostButton').attr("href",valueLinkChecked)
+        document.getElementById(l).style.display = 'block';        
+       }
+       else{
+         document.getElementById(l).style.display = 'none';
+       }
+    });
+  include _validation
+  include _jsformload
+  

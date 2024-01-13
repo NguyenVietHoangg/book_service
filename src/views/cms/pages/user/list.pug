@@ -1,0 +1,83 @@
+extends ../../layouts/base
+block title
+  h1 Danh sách tài khoản 
+block content
+  .box
+    .box-body
+      .row
+        .col-lg-12.col-md-12
+          .buttons-toolbar
+          #toolbar
+            button#remove.btn.btn-danger.button-manager(disabled='')
+              i.fa.fa-trash
+              |  Xóa 
+            a(href='').btn.btn-default.button-manager
+              i.fa.fa-refresh
+              |  Refresh 
+          .row#box-filter
+            .col-lg-3.col-md-3
+              label Mã tài khoản
+              .form-group
+                input#searchId.form-control(type='text' placeholder='Mã tài khoản' name='id')
+            .col-lg-4.col-md-4
+              label Tên tài khoản
+              .form-group
+                input#search.form-control(type='text' placeholder='Tên tài khoản...' name='search')
+            .col-lg-2.col-md-2
+              .form-group
+                label Trạng thái người dùng
+                select#order.select2.form-control.status-selection(name='status')
+                  option(value='') Tất cả
+                  each stat, index in global.configGlobal.status
+                    option(value=stat.type) #{stat.name}
+            .col-lg-3.col-md-3  
+              .form-group
+                label Thời gian tạo tài khoản (bắt đầu)
+                .input-group.date
+                  .input-group-addon
+                    i.fa.fa-calendar
+                  input#start_date.datepicker.form-control.pull-right(type='text' name="startDate" autocomplete="off")
+            .col-lg-3.col-md-3  
+              .form-group
+                label Thời gian tạo tài khoản (kết thúc)
+                .input-group.date
+                  .input-group-addon
+                    i.fa.fa-calendar
+                  input#end_date.datepicker.form-control.pull-right(type='text' name="endDate" autocomplete="off")
+
+          table#table-user(data-buttons-toolbar='.buttons-toolbar' data-toolbar-align='unset' data-search='false' data-icons-prefix='fa' data-show-refresh='false' data-show-toggle='false' data-show-columns='true' data-show-export='true' data-detail-view='false' data-detail-formatter='detailFormatter' data-minimum-count-columns='2' data-show-pagination-switch='false' data-pagination='true' data-id-field='id' data-page-list='[30]' data-show-footer='false' data-side-pagination='server' data-url='/admin/user/ajax-list' data-query-params='queryParams' data-response-handler='responseHandler')
+  script.
+    //- var fields = [{field: 'name'}, {field: 'avatar', formatter: 'imageFormatter'}, {field: 'status'}];
+    var fields = [
+      {
+        "field":"id",
+        "title":"Mã khách hàng"
+      },
+      {
+        "field":"fullName",
+        "title":"Tên khách hàng"
+      },
+      {
+        "field":"phone",
+        "title":"Số điện thoại"
+      },
+      {
+        "field":"email",
+        "title":"Email"
+      },
+      {
+        "field":"totalProductBought",
+        "title":"Số sản phẩm đã mua"
+      },
+      {
+        "field":"totalPrice",
+        "title":"Số tiền đã thanh toán"
+      },
+      {
+        "field":"totalRate",
+        "title":"Số lần đánh giá"
+      }
+    ]
+    var urlManager = '/admin/user';
+    var setLimitRow = 30;
+  include ./_tablejs

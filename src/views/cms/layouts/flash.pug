@@ -1,0 +1,13 @@
+.flash-messages.content-header
+	if errors && errors.length
+		.alert.alert-danger.fade.in
+			button.close(data-dismiss='alert', type='button')
+				i.fa.fa-times-circle-o
+			for error in errors
+				div= error
+	if successes && successes.length
+		.alert.alert-success.fade.in
+			button.close(data-dismiss='alert', type='button')
+				i.fa.fa-times-circle-o
+			for success in successes
+				div= success

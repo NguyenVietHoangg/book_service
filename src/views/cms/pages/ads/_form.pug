@@ -1,0 +1,234 @@
+mixin form(data={})
+  form#form-story(method='POST', action=(`/admin/ads/${data.id ? 'edit/'+data.id : 'add'}`), role='form')
+    if (data.id)
+      input(id= 'getidAds' type='hidden' name='id', value=data.id)
+      input(id='getdimension' type='hidden' value=data.dimension)
+         
+    .col-lg-12.col-md-12
+      .form-group(class=errors && errors.desc && 'has-error')
+        label.control-label Tiêu đề
+        .input-data-block
+          input.form-control#nameinput(name='name' type='text' value=(data.name ? data.name : '') placeholder='Điền tiêu đề bài viết')
+    .col-lg-6.col-md-6
+      .form-group(class=errors && errors.desc && 'has-error')
+        label.control-label slug
+        .input-data-block
+          input.form-control#slug(name='slug' type='text' value=(data.slug ? data.slug : '') placeholder='slug')
+          span#tbslug
+    .col-lg-6.col-md-6
+      .form-group(class=errors && errors.desc && 'has-error')
+        label.control-label Mô tả
+        .input-data-block
+          input.form-control(name='description' type='text' value=(data.description ? data.description : '') placeholder='Mô tả về quảng cáo')
+    .col-lg-6.col-md-6
+      .form-group(class=errors && errors.desc && 'has-error')
+        label.control-label Đơn vị quảng cáo
+        .input-data-block
+          input.form-control(name='organization' type='text' value=(data.organization ? data.organization : '') placeholder='Tổ chức')
+    .col-lg-6.col-md-6
+      .form-group(class=errors && errors.desc && 'has-error')
+        label.control-label Link open:
+        .input-data-block
+          input.form-control(name='link' type='text' value=(data.link ? data.link : '') placeholder='link mở nếu có')
+    .col-lg-12.col-md-12(style='margin-bottom:10px')      
+      button.btn.btn-success#btnchoseimage.changecolorrr(style="background-color:green"  onclick="choseImage()" type='button') Đặt ảnh
+      | &nbsp;           
+      button.btn.btn-success#btnchoselink.changecolorrr(style="background-color:green"  onclick="choseLink()" type='button') Đặt script
+    .col-lg-12.col-md-12
+      .col-lg-6.col-md-6(style="display:none" id='showChoseImage')
+        .form-group
+          label Chọn kích cỡ ảnh
+          select#Dimension.select2.form-control.Dimension-selection(name='Dimension')
+            option(value='') Lựa chọn kích thước ảnh
+            -if(imageDimention)
+              each dimen in imageDimention              
+                option(value=dimen.value selected=data.dimension === dimen.value ? true : false)  !{dimen.value}
+          br
+          br
+          .row#wrap-upload-imageShow
+          a.btn.btn-default#render-imageShow(href='javascript:;' onclick="initUploadAws('imageShow')") Choose image &nbsp;
+            i.fa.fa-image
+      .col-lg-6.col-md-6(style="display:none" id='showLinkScript')
+        .input-data-block
+          label Link script:
+          input(id= 'saveLinkScript' type='hidden')
+          input.form-control#linkScript(value=(data.adsScript ? data.adsScript : '') name='adsScript' type='text'  placeholder='Script')
+      .col-lg-6.col-md-6(style="display:none" id='showImageDemo')         
+        img#imageFix( style="border: 1px solid #b1154a;" src="/admin/images/table-loading-data.svg")
+      .col-lg-12.col-md-12
+        .form-group
+          label(style="font-size: 20px;") CÀI ĐẶT VÙNG HIỂN THỊ QUẢNG CÁO    
+          -if (ads)  
+            each ad in ads 
+              <br />
+              .row.block-quangcao(style="padding: 12px; border: 1px solid #3ea058; border-radius: 5px; margin-bottom: 10px;")
+                .inline-block-cate.parent
+                  -var configCheck3 = configChecked.filter(item3 =>item3.includes(ad.type))
+                  if(configCheck3.length)
+                    input.minimal.checkParent(id=ad.type checked=true name='adsParentId[]' value=ad.type type='checkbox')
+                  else 
+                    input.minimal.checkParent(id=ad.type name='adsParentId[]' value=ad.type type='checkbox')                                                           
+                  span(style="font-weight: bold") &nbsp;!{ad.name} 
+                if (ad.list_position && ad.list_position.length) 
+                  each listPosi in ad.list_position  
+                    <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    .col-lg-12.col-md-12
+                      .col-lg-2.col-md-2
+                        -var configCheck4 = configChecked.filter(item3 =>item3.includes(ad.type +'|' + listPosi.type))
+                        if(configCheck4.length)                     
+                          input.minimal.checkChild.ifChangeChild( id=ad.type+listPosi.type checked=true name='adsChildId[]' value=ad.type + '|'+listPosi.type type='checkbox') 
+                        else 
+                          input.minimal.checkChild.ifChangeChild( id=ad.type+listPosi.type name='adsChildId[]' value=ad.type + '|'+listPosi.type type='checkbox') 
+                        span &nbsp; !{listPosi.name}
+                      .col-lg-2.col-md-2                     
+                        label Loại hành vi:                  
+                        select#behavior.select2.form-control.behavior-selection(name='behavior') 
+                          -var configCheck2 = configChecked.filter(item3 =>item3.includes(ad.type +'|' + listPosi.type))                       
+                          if(configCheck2.length) 
+                            -var behavior = configCheck2[0].split('|')[0]                                           
+                            option(value='new_tab'+'|'+ad.type+'|'+listPosi.type selected=behavior==="new_tab"?true:false) Thẻ mới
+                            option(value='new_window'+'|'+ad.type+'|'+listPosi.type selected=behavior==="new_window"?true:false)  Cửa sổ mới
+                            option(value='redirect'+'|'+ad.type+'|'+listPosi.type selected=behavior==="redirect"?true:false ) Chuyển hướng
+                            option(value='open_inapp'+'|'+ad.type+'|'+listPosi.type selected=behavior==="open_inapp"?true:false) Mở trong ứng dụng 
+                          else 
+                            option(value='new_tab'+'|'+ad.type+'|'+listPosi.type ) Thẻ mới
+                            option(value='new_window'+'|'+ad.type+'|'+listPosi.type )  Cửa sổ mới
+                            option(value='redirect'+'|'+ad.type+'|'+listPosi.type  ) Chuyển hướng
+                            option(value='open_inapp'+'|'+ad.type+'|'+listPosi.type) Mở trong ứng dụng 
+                      .col-lg-2.col-md-2                     
+                        label Kích thước khuyến nghị:
+                        div !{listPosi.allowDimension}  
+                      .col-lg-6.col-md-6
+                        .form-group                  
+                          label Thời gian đặt quảng cáo:          
+                          .col-lg-12.col-md-12
+                            -var configCheck = configChecked.filter(item3 => (item3.includes(ad.type +'|' + listPosi.type) && item3.split('|')[3] == 'null'))
+                            if (configCheck.length)                        
+                              input.minimal.ifChangeTime( id="checkAllTime"+ad.type +listPosi.type name='checkAllTime[]' checked=true type='checkbox' value=ad.type + '|'+listPosi.type)
+                            else 
+                              input.minimal.ifChangeTime( id="checkAllTime"+ad.type +listPosi.type name='checkAllTime[]'  type='checkbox' value=ad.type + '|'+listPosi.type)
+                            span &nbsp; Toàn thời gian           
+                          .col-lg-12.col-md-12
+                            -var configCheck1 = configChecked.filter(item3 => (item3.includes(ad.type +'|' + listPosi.type) && item3.split('|')[3] != 'null'))                                                    
+                            if(configCheck1.length)
+                              -var x = configCheck1[0].split('|')[3]                      
+                              -var y = x.replace(' ','T')
+                              -var z = configCheck1[0].split('|')[4]                      
+                              -var d = z.replace(' ','T')
+                              -var now = new Date().toISOString().split('T')[0] + 'T00:00'                         
+                              input.minimal.ifChangeTime.inputTimeList(id="checkTime"+ad.type +listPosi.type checked=true  type='checkbox' value=ad.type + '|'+listPosi.type)
+                              | &nbsp;
+                              span Bắt đầu &nbsp; 
+                              | &nbsp;
+                              input.classInputTime(min=now  onchange="handler('"+ad.type+"','"+listPosi.type+"');" id="inputTime"+ad.type +listPosi.type type='datetime-local' autocomplete="off" name='publishedAt[]' value=y)
+                              | &nbsp;&nbsp;&nbsp;&nbsp; 
+                              span Kết thúc &nbsp;
+                              input(min=now onchange="handlerr('"+ad.type+"','"+listPosi.type+"');" id="inputTimeTo"+ad.type +listPosi.type type='datetime-local' autocomplete="off" name='publishedAtTo[]'  value=d)  
+                              input(type='hidden' id='save'+ad.type +listPosi.type)                            
+                              input(type='hidden' id='saveTo'+ad.type +listPosi.type) 
+                            else 
+                              -var now = new Date().toISOString().split('T')[0] + 'T00:00'                               
+                              input.minimal.ifChangeTime.inputTimeList(id="checkTime"+ad.type +listPosi.type  type='checkbox' value=ad.type + '|'+listPosi.type)
+                              | &nbsp; 
+                              span Bắt đầu &nbsp;                
+                              input(min=now  onchange="handler('"+ad.type+"','"+listPosi.type+"');" id="inputTime"+ad.type +listPosi.type type='datetime-local' autocomplete="off" name='publishedAt[]' )
+                              | &nbsp;&nbsp;&nbsp;&nbsp; 
+                              span Kết thúc &nbsp;
+                              | &nbsp;
+                              input(min=now  onchange="handlerr('"+ad.type+"','"+listPosi.type+"');" id="inputTimeTo"+ad.type +listPosi.type type='datetime-local' autocomplete="off" name='publishedAtTo[]')                
+                              input(type='hidden' id='save'+ad.type +listPosi.type)                            
+                              input(type='hidden' id='saveTo'+ad.type +listPosi.type) 
+    .col-lg-12.col-md-12(style="margin-top: 20px")  
+      .form-group.right
+        button.btn.btn-success(style="margin-right:20px")
+          |  Submit
+        a.btn.btn-default(style="margin-left: 20px;" href="/admin/ads")
+          | Hủy bỏ
+
+
+  include ../../layouts/modal-upload 
+  include _validation
+  include _jsformload
+  script.
+
+    // hiển thị kích cỡ ảnh ban đầu
+    let textDimention = $( "#Dimension option:selected" ).text(); 
+    $.ajax(
+          {
+            url: "/ads/findLinkImage",    
+            method: "post",
+            data:
+            {              
+              dimention: textDimention                         
+            },
+            success: function (res) {  
+              $('#imageFix').attr("src",res);
+            }
+          });   
+    // end hiển thị kích cỡ
+
+    // sự kiện thay đổi chọn kich thước
+    $('#Dimension').on('change', function (e) {      
+      var optionSelected = $("option:selected", this)      
+      var valueSelected = this.value      
+      $.ajax(
+          {
+            url: "/ads/findLinkImage",    
+            method: "post",
+            data:
+            {              
+              dimention: valueSelected                         
+            },
+            success: function (res) {  
+              $('#imageFix').attr("src",res);
+            }
+          });   
+    });
+
+    // save inputTimeList
+    let x = document.querySelectorAll(".inputTimeList")      
+    for (i = 0; i < x.length; i++) {
+      let valueInput = x[i].value.replace("|","")
+      let valueTime = $('#inputTime'+valueInput).val()
+      let valueTimeTo = $('#inputTimeTo'+valueInput).val()      
+      $('#save'+valueInput).val(valueTime)   
+      $('#saveTo'+valueInput).val(valueTimeTo)       
+    }    
+
+    // hiển thị ban đầu khi ra view 
+    let getDimension = $('#getdimension').val()
+    let linkScript = $('#linkScript').val()
+    $('#saveLinkScript').val(linkScript)
+    let saveLinkScript = $('#saveLinkScript').val()    
+    // hiển thị ban đầu khi ra view
+    if(getDimension){      
+      $("#btnchoselink").attr('style', 'background-color:green');  
+      $("#btnchoseimage").attr('style', 'background-color:red');       
+      document.getElementById('showChoseImage').style.display = 'block';
+      document.getElementById('showLinkScript').style.display = 'none';
+      document.getElementById('showImageDemo').style.display = 'block';
+    }
+    else{
+      $("#btnchoselink").attr('style', 'background-color:red');  
+      $("#btnchoseimage").attr('style', 'background-color:green');       
+      document.getElementById('showChoseImage').style.display = 'none';
+      document.getElementById('showLinkScript').style.display = 'block';
+      document.getElementById('showImageDemo').style.display = 'none';
+    }
+    // ấn nút này hiện content của nó
+    function choseImage(){ 
+      $("#btnchoselink").attr('style', 'background-color:green');  
+      $("#btnchoseimage").attr('style', 'background-color:red');       
+      $('#linkScript').val('')
+      document.getElementById('showChoseImage').style.display = 'block';
+      document.getElementById('showLinkScript').style.display = 'none';
+      document.getElementById('showImageDemo').style.display = 'block';
+    }
+    function choseLink(){
+      $("#btnchoselink").attr('style', 'background-color:red');  
+      $("#btnchoseimage").attr('style', 'background-color:green');       
+      $('#linkScript').val(saveLinkScript)
+      document.getElementById('showChoseImage').style.display = 'none';
+      document.getElementById('showLinkScript').style.display = 'block';
+      document.getElementById('showImageDemo').style.display = 'none';
+    }

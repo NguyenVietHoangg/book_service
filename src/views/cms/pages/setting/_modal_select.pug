@@ -1,0 +1,17 @@
+#myModal.modal
+  .modal-dialog
+    .modal-content
+      .modal-header
+        span.modal-title(style="font-size:18px") Chọn ID của
+        span.namecollection(style="font-size:18px; color:red") 
+        br
+        span.tborcollection(style="font-size:15px; color:blue; font-style:italic ")       
+      .modal-body   
+        //  lưu id collection mà bài viết đang chọn
+        input(id='typereset' value='' type='hidden')
+        input.form-control(id='idRemove' type='number' placeholder='Điền ID')
+      .modal-footer
+        button.btn.btn-danger.btnapply( style="background-color:green") Apply
+        button.btn.btn-danger.btncancel( data-dismiss='modal' style="background-color:blue") Cancel
+script(type='text/javascript').
+    

@@ -1,0 +1,21 @@
+extends ../../layouts/base
+
+block title
+  h1 Edit testx2
+
+block content
+  <div class="row">
+    <div class="col-md-12">
+      <div class="box">
+        <div class="box-body">
+          include ./_form
+          +form(data ? data : {})
+        </div>
+      </div>
+    </div>
+  </div>
+  script(type='text/javascript').
+    $(function () {
+      initUploadAws('name_11', {open: false, src: '#{data.name_11}'});
+initUploadAws('name_12', {open: false, src: '#{data.name_12}'}, true);
+    });

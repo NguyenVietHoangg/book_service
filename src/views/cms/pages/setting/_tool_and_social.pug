@@ -1,0 +1,90 @@
+mixin form(data={})
+  form#form_data(method='POST', action=(`/admin/setting/${data.id ? 'edit/'+data.id : 'add'}`), role='form')
+    if (data.id)
+      input(type='hidden' name='id', value=data.id)
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label Loại cài đặt:
+        input.form-control(name='type' type='text' value=(data.type ? data.type : '') placeholder='type' readonly=(data.id ? true : false))
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label Tên cài đặt:
+        input.form-control(name='name' type='text' value=(data.name ? data.name : '') placeholder='name')
+    - var content = JSON.parse(data.content)
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label Google Analytic Id:
+        input.form-control(name='google_analytic_id' type='text' value=(content.google_analytic_id ? content.google_analytic_id : '') placeholder='google analytic id')
+    
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label Facebook App Id:
+        input.form-control(name='facebook_app_id' type='text' value=(content.facebook_app_id ? content.facebook_app_id : '') placeholder='facebook_app_id')
+        
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label Facebook Page Url:
+        input.form-control(name='facebook_page' type='text' value=(content.facebook_page ? content.facebook_page : '') placeholder='facebook_page')
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label Facebook Messenger:
+        input.form-control(name='facebook_message' type='text' value=(content.facebook_messenger ? content.facebook_messenger : '') placeholder='facebook messenger')
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label Youtube Chanel:
+        input.form-control(name='youtube' type='text' value=(content.youtube ? content.youtube : '') placeholder='youtube')
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label Skype:
+        input.form-control(name='skype' type='text' value=(content.skype ? content.skype : '') placeholder='skype')
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label Instagram:
+        input.form-control(name='instagram' type='text' value=(content.instagram ? content.instagram : '') placeholder='instagram')
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label Mobile:
+        input.form-control(name='mobile' type='text' value=(content.mobile ? content.mobile : '') placeholder='mobile')
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label Zalo:
+        input.form-control(name='zalo' type='text' value=(content.zalo ? content.zalo : '') placeholder='zalo')
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label Email:
+        input.form-control(name='email' type='text' value=(content.email ? content.email : '') placeholder='email')
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label Contact:
+        input.form-control(name='contact' type='text' value=(content.contact ? content.contact : '') placeholder='contact')
+    
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label Personal Info:
+        input.form-control(name='personal_info' type='text' value=(content.personal_info ? content.personal_info : '') placeholder='personal info')
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label Address:
+        input.form-control(name='address' type='text' value=(content.address ? content.address : '') placeholder='address')
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label Address map:
+        input.form-control(name='map_address' type='text' value=(content.map_address ? content.map_address : '') placeholder='map address')
+
+    .col-lg-12.col-md-12
+      .form-group
+        button.btn.btn-success
+          i.fa.fa-check
+          |  Submit
+    include ../../layouts/modal-upload
+  include _validation

@@ -1,0 +1,14 @@
+extends ../../layouts/base
+block title
+  h1 Tạo quảng cáo
+block content
+  <div class="row">
+    <div class="col-md-12">
+      <div class="box">
+        <div class="box-body">
+          include ./_form_add
+          +form(data ? data : {})
+        </div>
+      </div>
+    </div>
+  </div>

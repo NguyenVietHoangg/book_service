@@ -1,0 +1,30 @@
+extends ../../layouts/base
+block title
+  h1 Đẩy Notification 
+block content
+    .col-md-12    
+    .box.box-primary
+        i.ion.ion-android-globe(style="margin-left:10px;color:#3c8dbc;font-size:20px")       
+        span.box-title(style="margin-left:5px;color:#3c8dbc;font-size:25px") Add Push      
+        form(method='POST', action=(`/admin/pushnotification/`), role='form')
+            .box-body
+                .form-group            
+                    label Title
+                    input.form-control(name='title' type='text', placeholder='Title(Any/English')
+                .form-group            
+                    label Message                           
+                    textarea.form-control(name='message' rows='3', placeholder='Message(Any/English')    
+                .form-group        
+                    label Image                   
+                    input(name='upload', type='file')                
+                .form-group 
+                    label Launch URL
+                    input.form-control(name='launchUrl' type='text', placeholder='http://bit.ly/abc')                     
+            .box-footer
+                button.btn.btn-primary(type='submit') Submit
+
+
+
+
+
+            

@@ -1,0 +1,67 @@
+extends ../../layouts/base
+block title
+  h1 DashBoard
+block content  
+  .box
+    .box-body 
+      .row
+        .col-md-3.col-sm-6.col-xs-12
+          .info-box
+            span.info-box-icon.bg-aqua
+              i.ion.ion-ios-list
+            .info-box-content
+              span.info-box-text Truyện 7 ngày / Tổng truyện
+              span.info-box-number !{countStoryAll} / !{totalDashboard[0].value}
+              
+        .col-md-3.col-sm-6.col-xs-12
+          .info-box
+            span.info-box-icon.bg-navy
+              i.ion.ion-ios-list
+            .info-box-content
+              span.info-box-text Số  chương chưa đồng bộ
+              span.info-box-number !{totalDashboard[1].value}
+                
+        .col-md-3.col-sm-6.col-xs-12
+          .info-box
+            span.info-box-icon.bg-maroon
+              i.ion.ion-ios-filing
+            .info-box-content
+              span.info-box-text Tổng số category
+              span.info-box-number !{countCategoryAll}
+                
+        .col-md-3.col-sm-6.col-xs-12
+          .info-box
+            span.info-box-icon.bg-aqua
+              i.ion.ion-ios-grid-view
+            .info-box-content
+              span.info-box-text Tổng số truy cập trong 7 ngày
+              span.info-box-number !{sumView}
+                
+      .box.box-primary
+        ul.todo-list.ui-sortable
+          li
+            span.text !{totalDashboard[2].name}
+          each item in totalDashboard[2].value
+            a.btn.btn-button.btn-warning(href='/admin/story/edit/'+item.id target='_blank' style='margin: 5px;') !{item.name}
+      i.ion.ion-android-globe(style="margin-left:10px;color:#3c8dbc;font-size:20px")       
+      span.box-title(style="margin-left:5px;color:#3c8dbc;font-size:25px") Số lượng bài viết trong 7 ngày qua(!{sumStory7DayAgo})    
+      table#table_story(data-buttons-toolbar='.buttons-toolbar' data-toolbar-align='unset' data-search='false' data-icons-prefix='fa' data-show-refresh='false' data-show-toggle='false' data-show-columns='true' data-show-export='true' data-detail-view='false' data-detail-formatter='detailFormatter' data-minimum-count-columns='2' data-show-pagination-switch='false' data-pagination='true' data-id-field='id' data-page-list='[30]' data-show-footer='false' data-side-pagination='server' data-url='/admin/dashboard/ajax-list' data-query-params='queryParams' data-response-handler='responseHandler')
+    include ../../layouts/model_story_status_publishAt
+  script.
+    var fields = [
+      {"field":"id","title":"id"}, 
+      {"field":"name","title":"Tiêu đề"}, 
+      {"field":"view","title":"Lượt xem"}, 
+      {"field":"imageSave","title":"Ảnh đại diện","formatter":"imageFormatter"},
+      {"field":"categories","title":"Thể loại", "formatter": "showCategories"}, 
+      {"field":"collections","title":"Bộ sưu tập", "formatter": "showCollections"}, 
+      {"field":"tags","title":"hashtags", "formatter": "showTags"}, 
+      {"field":"status","title":"Trạng thái", "formatter": "showStatus"},
+      {"field":"publishedAt","title":"Thời gian published" , "formatter" : "showTime"}
+    ]
+    var urlManager = '/admin/story';
+    var setLimitRow = 30;     
+  include ./_tablejs
+                                                                       
+    
+        

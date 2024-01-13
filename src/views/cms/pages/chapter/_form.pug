@@ -1,0 +1,39 @@
+mixin form(data={})
+  form#form-chapter(method='POST', action=(`/admin/chapter/${data.id ? 'edit/'+data.id+'/'+story.id : 'add'+'/'+storyId}`), role='form')
+    input(type='hidden' name='storyId', value=story.id)
+    input(type='hidden' name='slugStory', value=story.slug)
+    if (data.id)
+      input(type='hidden' name='id', value=data.id)
+    .col-lg-12.col-md-12
+      .form-group(class=errors && errors.desc && 'has-error')
+        label.control-label story Name:
+        .input-data-block
+          input.form-control(name='storyName' type='text' value=(story.name ? story.name : '') placeholder='Tên truyện' disabled)
+
+    .col-lg-12.col-md-12
+      .form-group(class=errors && errors.desc && 'has-error')
+        label.control-label chapter Name:
+        .input-data-block
+          input.form-control(name='name' type='text' value=(data.name ? data.name : '') placeholder='Tên chương')
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label Mô tả:
+        textarea.summernote(name='description') !{data.description ? data.description : ''}
+
+    .col-lg-12.col-md-12(style="display: none;")
+      .form-group
+        label.control-label status:
+        select.select2.form-control(name='status' autocomplete="off")
+            option(value='on' data-image='' selected=data.status===''?true:false) on
+            option(value='review' data-image='' selected=data.status===''?true:false)  review
+            option(value='off' data-image='' selected=data.status===''?true:false)  off
+
+    .col-lg-12.col-md-12
+      .form-group
+        button.btn.btn-success
+          i.fa.fa-check
+          |  Submit
+    include ../../layouts/modal-upload
+  include _validation
+  include _jsformload

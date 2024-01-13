@@ -1,0 +1,56 @@
+extends ../../layouts/base
+block title
+  h1 permission 
+block content
+  .box
+    .box-body
+      .row
+        .col-lg-12.col-md-12
+          .buttons-toolbar
+          #toolbar
+            a.btn.btn-success.button-manager(href='/admin/permission/add')
+              i.fa.fa-plus
+              |  Create 
+            button#remove_permission.btn.btn-danger.button-manager(disabled='')
+              i.fa.fa-trash
+              |  Delete 
+            a(href='').btn.btn-default.button-manager
+              i.fa.fa-refresh
+              |  Refresh 
+          .row#box_filter_permission(style="margin-top: 7px")
+            .col-lg-4.col-md-4
+              label Key search
+              .form-group
+                input#search.form-control(type='text' placeholder='title...' name='search' autocomplete="off")
+            .col-lg-2.col-md-2
+              .form-group
+                label With
+                select#order.select2.form-control.status-selection(name='order')
+                  option(value='') ALL
+                  option(value='0') Status
+            .col-lg-2.col-md-2  
+              .form-group
+                label Start Date
+                .input-group.date
+                  .input-group-addon
+                    i.fa.fa-calendar
+                  input#start_date.datepicker.form-control.pull-right(type='text' name="start_date" autocomplete="off")
+            .col-lg-2.col-md-2  
+              .form-group
+                label End Date
+                .input-group.date
+                  .input-group-addon
+                    i.fa.fa-calendar
+                  input#end_date.datepicker.form-control.pull-right(type='text' name="end_date" autocomplete="off")
+            .col-lg-2.col-md-2
+              .form-group
+                button(style='margin-top: 25px;')#filter_permission.btn.btn-primary(type='submit')
+                  i.fa.fa-filter
+                  |  Filter
+          table#table_permission(data-buttons-toolbar='.buttons-toolbar' data-toolbar-align='unset' data-search='false' data-icons-prefix='fa' data-show-refresh='false' data-show-toggle='false' data-show-columns='true' data-show-export='true' data-detail-view='false' data-detail-formatter='detailFormatter' data-minimum-count-columns='2' data-show-pagination-switch='false' data-pagination='true' data-id-field='id' data-page-list='[30]' data-show-footer='false' data-side-pagination='server' data-url='/admin/permission/ajax-list' data-query-params='queryParams' data-response-handler='responseHandler')
+  script.
+    //- var fields = [{field: 'name'}, {field: 'avatar', formatter: 'imageFormatter'}, {field: 'status'}];
+    var fields = [{"field":"name","title":"name"},{"field":"type","title":"type"},{"field":"route","title":"route"},{"field":"method","title":"method"},{"field":"content","title":"content"},{"field":"status","title":"status"}]
+    var urlManager = '/admin/permission';
+    var setLimitRow = 30;
+  include ./_tablejs

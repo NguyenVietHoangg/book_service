@@ -1,0 +1,47 @@
+mixin form(data={})
+  form#form_data(method='POST', action=(`/admin/setting/${data.id ? 'edit/'+data.id : 'add'}`), role='form')
+    if (data.id)
+      input(type='hidden' name='id', value=data.id)
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label Loại cài đặt:
+        input.form-control(name='type' type='text' value=(data.type ? data.type : '') placeholder='type' readonly=(data.id ? true : false))
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label Tên cài đặt:
+        input.form-control(name='name' type='text' value=(data.name ? data.name : '') placeholder='name')
+    - var content = JSON.parse(data.content)
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label SEO H1:
+        input.form-control(name='seo_h1' type='text' value=(content.seo_h1 ? content.seo_h1 : '') placeholder='seo h1')
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label Favicon:
+        .row#wrap-upload-icon
+        a.btn.btn-default#render-icon(href='javascript:;' onclick="initUploadAws('icon')") Choose image &nbsp;
+          i.fa.fa-image
+    
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label Tiêu đề:
+        input.form-control(name='title' type='text' value=(content.title ? content.title : '') placeholder='title')
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label Keyword:
+        input.form-control(name='keyword' type='text' value=(content.keyword ? content.keyword : '') placeholder='keyword')
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label Mô tả:
+        input.form-control(name='desc' type='text' value=(content.desc ? content.desc : '') placeholder='desc')
+
+    .col-lg-12.col-md-12
+      .form-group
+        button.btn.btn-success
+          i.fa.fa-check
+          |  Submit
+    include ../../layouts/modal-upload
+  include _validation

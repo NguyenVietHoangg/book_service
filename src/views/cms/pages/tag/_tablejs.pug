@@ -1,0 +1,360 @@
+
+block stylesheets
+  link(rel='stylesheet' href='/admin/plugins/bootstrap-table/bootstrap-table.min.css')
+block scripts
+  script(src='/admin/plugins/bootstrap-table/tableExport.min.js')
+  script(src='/admin/plugins/bootstrap-table/bootstrap-table.min.js')
+  script(src='/admin/plugins/bootstrap-table/extensions/export/bootstrap-table-export.min.js')
+  script.
+    const $table_tag = $('#table_tag');
+    const $remove_tag = $('#remove_tag');
+    const $filter_tag = $('#filter_tag');
+    const $boxfilter_tag = $('#box_filter_tag');
+    const limitRow = 30;
+    var isShowImage = false;
+
+    $(function () {
+      // khởi tạo dữ liệu input (nếu có)
+      $('#box_filter-tag .form-filter input[name]').keydown(function(event) {
+          if ( event.which == 13 ) {
+              $('#box_filter_tag .form-filter #filter').click();
+          }
+      });
+      $('#box_filter_tag .datepicker').datepicker({
+        autoclose: true
+      })
+
+      $filter_tag.click(function () {
+        $('.img-cus').removeClass('selected-img');
+        $('.img-cus-input').removeClass('selected-img');
+        window.idSaveAttachmenIdTmpValue = '';
+        $table_tag.bootstrapTable('refresh')
+      });
+      $('#search').keypress(function(event){
+        var keycode = (event.keyCode ? event.keyCode : event.which);
+        if(keycode == '13'){
+          $('.img-cus').removeClass('selected-img');
+          $('.img-cus-input').removeClass('selected-img');
+          window.idSaveAttachmenIdTmpValue = '';
+          event.preventDefault();
+          $table_tag.bootstrapTable('refresh');
+          return false;
+        }
+      });
+      $('#search').on('keydown', function() {
+        $table_tag.bootstrapTable('refresh');
+      });
+      $('#order').on('change', function() {
+        $table_tag.bootstrapTable('refresh');
+      });
+    });
+    function queryParams(defaultParams) {
+      var params = defaultParams;
+      $boxfilter_tag.find('input[name]').each(function () {
+        params[$(this).attr('name')] = $(this).val()
+      })
+      $boxfilter_tag.find('select').each(function () {
+        params[$(this).attr('name')] = $(this).val()
+      })
+      $boxfilter_tag.find('input[start_date]').each(function () {
+        params[$(this).attr('start_date')] = $(this).val()
+      })
+      $boxfilter_tag.find('input[end_date]').each(function () {
+        params[$(this).attr('end_date')] = $(this).val()
+      })
+      //- params.limit = 2
+      return params;
+    }
+
+    $('#start_date').on('change', function() {
+      $table_tag.bootstrapTable('refresh');
+    });
+    $('#end_date').on('change', function() {
+      $table_tag.bootstrapTable('refresh');
+    });
+
+    function initTable(dataLoad={}) {
+      $('.img-cus').removeClass('selected-img');
+      $('.img-cus-input').removeClass('selected-img');
+      window.idSaveAttachmenIdTmpValue = '';
+      setTimeout(() => {
+        if ($(".img-colorbox")) {
+          $(".img-colorbox").colorbox({rel:'img-colorbox', width: '90%',height: '90%', maxWidth: '640px', maxHeight: '640px'});
+        }
+      }, 200);
+      var fieldsTable = [{
+        field: 'state',
+        checkbox: true,
+        align: 'center',
+        valign: 'middle',
+        class: 'valign-middle'
+      }];
+      var onlyImage = false
+      for (let iField = 0; iField < fields.length; iField++) {
+        if (fields[iField].formatter === 'imageFormatter') {
+          fieldsTable.push({
+            field: fields[iField].field,
+            title: 'image',
+            sortable: true,
+            editable: true,
+            align: 'left',
+            valign: 'middle',
+            formatter: imageFormatter
+          });
+          var $viewImage = fields[iField].field;
+          onlyImage = true
+        } else {
+          let item = {field: fields[iField].field};
+          item.title = fields[iField].title || fields[iField].field;
+          item.align = fields[iField].align || 'center';
+          item.valign = fields[iField].valign || 'middle';
+          item.class = fields[iField].class || 'middle';
+          item.sortable = fields[iField].sortable || true;
+          item.editTable = fields[iField].editTable || true;
+          if (fields[iField].formatter) {
+            item.formatter = fields[iField].formatter;
+          } else {
+            item.formatter = 'formarterString'
+          }
+          fieldsTable.push(item);
+        }
+      }
+
+      if (dataLoad.onlyImage) {
+        fieldsTable.shift()
+        fieldsTable.push({
+          field: 'operate',
+          title: 'Actions',
+          align: 'right',
+          valign: 'middle',
+          //- events: operateEvents,
+          formatter: imageMoreFormatter
+        });
+      } else {
+        fieldsTable.push({
+          field: 'operate',
+          title: 'Actions',
+          align: 'right',
+          valign: 'middle',
+          //- events: operateEvents,
+          formatter: operateFormatter
+        });
+      }
+        
+      $table_tag.bootstrapTable({
+        formatLoadingMessage: function () {
+          return '<div class="table-loading-data"><img src="/admin/images/table-loading-data.svg"/></div>';
+        },
+        height: getHeight(),
+        icons: {
+          columns: 'fa-th-list',
+          export: 'fa-file'
+        },
+        columns: [
+          fieldsTable
+        ],
+        pageSize: setLimitRow ? setLimitRow : limitRow
+      });
+      // sometimes footer render error.
+      setTimeout(() => {
+        $table_tag.bootstrapTable('resetView');
+      }, 200);
+      $table_tag.on('check.bs.table uncheck.bs.table ' +
+        'check-all.bs.table uncheck-all.bs.table', () => {
+          $remove_tag.prop('disabled', !$table_tag.bootstrapTable('getSelections').length);
+          // save your data, here just save the current page
+          selections = getIdSelections();
+          // push or splice the selections if you want to save all data selections
+        });
+      $remove_tag.click(() => {
+        Swal.fire({
+          title: 'Bạn có chắc chắn xóa?',
+          text: "Dữ liệu được chọn sẽ bị xóa khỏi hệ thống nếu đồng ý!",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#969696',
+          confirmButtonText: 'ĐỒNG Ý',
+          cancelButtonText: 'HỦY BỎ',
+        }).then((result) => {
+          if (result.value) {
+            const ids = getIdSelections();
+            let xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+              if (this.readyState == 4 && this.status == 200) {
+                //- window.location.href = urlManager;
+                $('tr.selected').remove()
+                $.notify("Success", { position:"bottom right", className: "success" });
+              }
+            };
+            xhttp.open('DELETE', urlManager + '/remove/0/?ids=' + ids, true);
+            xhttp.send();
+          }
+        })
+      });
+      $(window).resize(() => {
+        $table_tag.bootstrapTable('resetView', {
+          height: getHeight()
+        });
+      });
+    }
+    function formarterString(value, row, index) {
+      return window.substringchar(value)
+    }
+    function getIdSelections() {
+      return $.map($table_tag.bootstrapTable('getSelections'), ({ id }) => id);
+    }
+    function responseHandler(res) {
+      return res;
+    }
+    /*=== Function table formatter ===*/
+    function menuTitleFormatter(value, row, index) {
+      let html = '';
+      if (!row.parent) {
+        html += '<div class="node-parent">'+ row.title +'</div>';
+      } else {
+        html += '<div class="node-children">'+ row.title +'</div>';
+      }
+      return html;
+    }
+
+    function orderFormatter(value, row, index) {
+      let html = '';
+      html += '<span class="fa fa-angle-double-up update-order" title="Move up" onclick="updateOrder(\''+ row.id + '\', 1)"></span>';
+      html += '<span class="fa fa-angle-double-down update-order" title="Move down" onclick="updateOrder(\''+ row.id + '\', 2)"></span>';
+      return html;
+    }
+
+    function detailFormatter(index, row) {
+      const html = [];
+      $.each(row, (key, value) => {
+        html.push(`<p><b>${key}:</b> ${value}</p>`);
+      });
+      return html.join('');
+    }
+
+    function showStatus(value, row, index) {
+      const pushValue = value == 'on' ? 'off' : 'on';
+      let btn = value == 'on' ? 'btn btn-success' : 'btn-default';
+      return '<div  value='+value+' id="change-status-'+row.id+'" class="btn '+btn+'" onclick="changeStatus('+"'"+row.id+"'"+','+"'"+pushValue+"'"+')">'+value+'</div>';
+    }
+
+    function changeStatus(id, status) {
+      let val = $("#change-status-" + id).text()  
+      
+          $.ajax({
+          url: 'tag/changestatus/'+id,
+          method: 'post',
+          data: {status, id},
+          success: function(res) {
+            if (res) {
+              const dom_id = $('#change-status-'+id);
+              const on_click = 'changeStatus('+"'"+id+"'"+','+"'"+(status === "on" ? "off" : "on")+"'"+')';
+              dom_id.text(status === "on" ? "on" : "off");
+              dom_id.removeClass("btn-success").removeClass("btn-default");
+              dom_id.addClass(status === "on" ? "btn-success" : "btn-default");
+              dom_id.attr("onclick", on_click);
+              $.notify("Success", { position:"bottom right", className: "success" });
+            } else {
+              $.notify("Error", { position:"bottom right", className: "error" });
+            }
+          }
+        })            
+    }
+
+    function displayName(value, row, index)
+    {     
+        let arr = []
+        arr.push(`<div>${row.name} <b style="color:red">[${row.countStory}]</b></div>`)
+        
+        return (arr.join(''));      
+    }
+
+    function operateFormatter(value, row, index) {
+      return [
+        `<a class="btn btn-sm bg-maroon margin" href="${urlManager}/edit/${row.id}" target="_blank">Sửa</a>`,
+      ].join('');
+    }
+    function imageMoreFormatter(value, row, index) {
+      return [
+        `<ul class='ul-btn'>`,
+        `<li><a class="btn btn-block btn-success btn-xs" href="javascript: setPickEditor('${row.path}')">Content </a></li>`,
+        `<li><a class="btn btn-block btn-success btn-xs img-cus-input" id="img-cus-input-${row.id}" href="javascript: setPickInput('${row.id}', '${row.path}')">Input</a></li>`,
+        `</ul>`
+      ].join('');
+    }
+    function getHeight() {
+      //- return $(window).height() - $('h1').outerHeight(true);
+    }
+    function formatResult(data) {
+      if (data.loading) {
+        return data.text;
+      }
+
+      var markup = data.name;
+
+      return markup;
+    }
+    function formatSelection(data) {
+      return data.name || data.text;
+    }
+
+    function updateOrder(id, direction) {
+      console.log('id', id, 'dir', direction)
+      $.ajax({medthod: 'PUT', url: "/menu/update-order/" + id + "/" + direction, success: function(result){
+        console.log("result", result)
+        $table_tag.bootstrapTable('refresh')
+      }});
+    }
+
+    function setPickEditor (src) {
+      var urlImg = DOMAIN_IMG + src;
+      urlImg = urlImg.replace('/uploads//', '/');
+      //- var urlImg = 'https://image.shutterstock.com/image-photo/white-transparent-leaf-on-mirror-260nw-577160911.jpg';
+      $('.summernote').summernote('editor.saveRange');
+      // Editor loses selected range (e.g after blur)
+      $('.summernote').summernote('editor.restoreRange');
+      $('.summernote').summernote('editor.focus');
+      $('.summernote').summernote('editor.insertImage', urlImg);
+      $('.modal-upload-form').modal('toggle');
+    }
+
+    function setPickInput (id, src) {
+      imageId = id;
+      var urlImg = src.indexOf('http://') != -1 || src.indexOf('http://') != -1 ? src : DOMAIN_IMG + src;
+      $('.img-cus').removeClass('selected-img');
+      $('.img-cus-input').removeClass('selected-img');
+      $("#img-cus-"+id).addClass('selected-img');
+      $("#img-cus-input-"+id).addClass('selected-img');
+      window.idSaveAttachmenIdTmpValue = urlImg;
+      window.imageId.Tmp = urlImg;
+      //- $('.modal-upload-form').modal('toggle');
+    }
+
+    function imageFormatter(value, row, index) {
+      let urlImg = DOMAIN_IMG;
+      if (value && value != '') {
+        if (value.indexOf('http://') != -1 || value.indexOf('http://') != -1) {
+          urlImg = value
+        } else {
+          urlImg += value;
+        }
+      } else if (row.path && row.path != '') {
+        urlImg += row.path;
+      }
+      let html = '';
+      html += '<a class="image img-colorbox" href="' + urlImg + '" title="' + row.name + '" target="_blank" rel="img-colorbox">';
+      html += '<img class="img img-cus img-responsive" id="img-cus-'+row.id+'" src="' + urlImg + '" style="" />';
+      html += '</a>';
+      return html;
+    }
+
+    $(() => {
+      if (typeof(disableLoad) === 'undefined') {
+        initTable();
+      }
+    });
+    var btnImage = '<div class="note-btn-group btn-group note-insert"><a class="btn btn-default" id="render-avatar" href="javascript:;" onclick="initUploadAws('+"'add-to-editor-2'"+')">Choose image &nbsp;<i class="fa fa-image"></i><input class="form-control" id="avatar2" name="avatar2" value="" type="hidden"></a></div>';
+    $(function () {
+      $('.note-toolbar').append(btnImage);
+    });

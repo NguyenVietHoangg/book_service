@@ -1,0 +1,232 @@
+#modal-default.modal.fade.in
+  .modal-dialog(style="width: 960px; margin: 30px auto;")
+    .modal-content
+      .modal-body
+        //- .categories-list(style="margin-bottom: 10px;")
+        //-   .form-group
+        //-     label Danh sách thể loại
+        //-     select#category-id.form-control(onchange="loadStory()")
+        //-       option(value='') Tất cả
+        //-       each item, index in categories
+        //-         option(value=item.id) !{item.name}
+        ul.nav.nav-tabs
+          li.active
+            a(href='#tab_1' data-toggle='tab' onclick="loadStory()") Danh sách
+          li
+            a(href='#tab_2' data-toggle='tab') Tìm kiếm Tin Và Chèn Vào Bộ Sưu Tập
+        .tab-content
+          label#collection-name(for='auto-search')
+          #tab_1.tab-pane.active
+            .form-group
+              input#auto-search-in-collection.form-control(type='text' placeholder='Nhập tên tin tức')
+              input#collection-id(type="hidden" name="collectionId")
+            table.table.table-bordered#story-in-collection
+            #paginationStory
+          #tab_2.tab-pane
+            .form-group
+              input#auto-search-story.form-control(style='width: 500px; display: inline-block; margin-right: 10px;' type='text' placeholder='Nhập tên tin tức để tìm kiếm' autocomplete="off")
+              select#positionSet.form-control(style='width: 70px; display: inline-block;')
+                option(value=1) 1
+                option(value=2) 2
+                option(value=3) 3
+                option(value=4) 4
+                option(value=5) 5
+              input#id-story-set(type='hidden')
+              input#collection-id(type="hidden" name="collectionId")
+            table.table.table-bordered#story-list-search
+            .form-group
+              .btn.btn-primary#add-collectionanh(onclick='addStory()') ADD
+      .modal-footer
+        button.btn.btn-default(type='button' data-dismiss='modal') Close
+script.
+  $('#auto-search-story').keyup(function () {
+    loadSearch();
+  });
+
+  $('#auto-search-in-collection').keyup(function () {
+    loadStory();
+  });
+
+  $('#modal-default').on("hidden.bs.modal", function() {
+    $('#id-story-set').val('')
+    $('.item-search-story').removeClass('bg-maroon').addClass('bg-olive')
+    $('#auto-search-story').val('')
+    $('#story-list-search').html('')
+  });
+
+  function loadSearch() {
+    var keySearch = $('#auto-search-story').val()
+    $('#id-story-set').val('')
+    $('.item-search-story').removeClass('bg-maroon').addClass('bg-olive')
+    if (keySearch.length <3) {
+      $('#story-list-search').html('')
+      return
+    }
+    $.ajax({
+      url: '/admin/story/ajax-list?keySearch='+$('#auto-search-story').val(),
+      success: function (res) {
+        if (res.total) {
+          var list = [];
+          for(var i = 0; i < res.rows.length; i++) {
+            var text = '<span class="btn bg-olive margin item-search-story" id="item-search-'+res.rows[i].id+'" onclick="chooseStory('+res.rows[i].id+')">'+res.rows[i].name+'</span>'
+            list.push(text);
+          }
+          $('#story-list-search').html(list.join(''))
+        } else {
+          $('#story-list-search').html('')
+        }
+      }
+    })
+  }
+
+  function loadStory() {
+    $.ajax({      
+      url: '/admin/story/ajax-list?collectionId='+$('#collection-id').val()+'&categoryId='+$('#category-id').val()+'&keySearch='+$('#auto-search-in-collection').val()+'&include=category_story,collection_story',
+      success: function (res) {
+        if (res.rows) {
+          var collectionId = $('#collection-id').val();
+          let totalPage = res.total / res.limit 
+          let checkInterger = Number.isInteger(totalPage)
+          if(checkInterger == false){
+            totalPage = Math.floor(res.total / res.limit) + 1;            
+          }
+          else{
+            totalPage = Math.floor(res.total / res.limit);            
+          }
+          var pagination =[];
+          var list = [];
+          const layoutListSmall = res.rows.map(item => {
+            text = '<p id="item-story-'+item.id+'" style="font-size: 20px;"><span style="color:red; font-weight: bold;">['+item.collection_stories[0]['position']+']</span> <span style="color: #0f92d0;">'+item.id+' - '+item.name+'</span> <span title="xóa" style="cursor: pointer;" onclick="removeStory('+item.id+', '+collectionId+')">🗑️</span></p>'
+            return text
+          })
+          for(let j=1; j<=totalPage;j++){
+            let offset = (j-1)*res.limit
+            let text1 = `<button class="btn btn-sm btnpage" type="button" style="background-color:#2b9cec; font-size: 18px; color: white; margin-right: 5px;" id="pagination${j}" value=${j} onclick="paginationStory(${offset},${j})">${j}</button>`
+            pagination.push(text1)             
+          }
+          $('#story-in-collection').html(layoutListSmall.join(''))
+          //- $('#paginationStory').html(pagination.join(''))
+          $('#paginationStory').html('Tìm được <span style="color:red; font-weight: bold;">'+res.total+'</span> bài viết')
+        } else {
+          $('#story-in-collection1').html('');
+        }
+      }
+    })
+  }
+
+  function chooseStory (id) {
+    $('.item-search-story').removeClass('bg-maroon').addClass('bg-olive')
+    $('#item-search-'+id).removeClass('bg-olive').addClass('bg-maroon')
+    $('#id-story-set').val(id)
+  }
+
+  function addStory () {
+    var idChoose = $('#id-story-set').val()
+    var positionSet = $('#positionSet').val()
+    if (!idChoose) {
+      $.notify("Vui lòng chọn bài viết", { position:"top right", className: "error" });
+      return
+    }
+    if (!positionSet) {
+      $.notify("Vui lòng chọn vị trí", { position:"top right", className: "error" });
+      return
+    }
+    Swal.fire({
+      title: 'Bạn có chắc chắn thêm bài viết vào bộ sưu tập này?',
+      text: "Dữ liệu được thêm vào bộ sưu tập!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#969696',
+      confirmButtonText: 'ĐỒNG Ý',
+      cancelButtonText: 'HỦY BỎ',
+    }).then((result) => {
+      if (result.value) {
+        $.ajax({
+          url: '/admin/collection/addstory',
+          method: 'post',
+          data: {
+            collectionId: $('#collection-id').val(),
+            storyId: idChoose,
+            position: positionSet
+          },
+          success: function (res) {
+            $.notify("Success", { position:"bottom right", className: "success" });
+          }
+        })
+      }          
+    })
+  }
+  
+  function removeStory (storyId, collectionId) {
+    Swal.fire({
+      title: 'Bạn có chắc chắn xóa bài viết khỏi bộ sưu tập này?',
+      text: "Bài viết sẽ bị xóa khỏi bộ sưu tập!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#969696',
+      confirmButtonText: 'ĐỒNG Ý',
+      cancelButtonText: 'HỦY BỎ',
+    }).then((result) => {
+      if (result.value) {
+        $.ajax({
+          url: '/admin/collection/removestory',
+          method: 'delete',
+          data: {
+            collectionId: collectionId,
+            storyId: storyId
+          },
+          success: function (res) {
+            $.notify("Success", { position:"bottom right", className: "success" });
+            $('#item-story-'+storyId).remove();
+          }
+        })
+      }          
+    })
+  }
+
+  function paginationStory(offset,page){     
+      $('#savevaluepagination').val(page)
+      let value =  $('#savevaluepagination').val()      
+      //- let x = document.querySelectorAll(".btnpage")      
+      //- for (i = 0; i < x.length; i++) {
+      //-   x[i].style.backgroundColor = "gray"              
+      //- }      
+      $.ajax({
+        url: '/admin/story/ajax-list?categoryId='+$('#category-id1').val()+'&keySearch='+$('#auto-search-in-category').val()+'&offset='+offset,
+        success: function (res) { 
+        if (res.rows) {        
+          let totalPage = res.total / res.limit 
+          let checkInterger = Number.isInteger(totalPage)
+          if(checkInterger == false){
+            totalPage = Math.floor(res.total / res.limit) + 1;            
+          }
+          else{
+            totalPage = Math.floor(res.total / res.limit);            
+          }
+          var pagination =[];
+          var list = [];
+          const layoutListSmall = res.rows.map(item => {
+            text = '<p id="item-story-'+item.id+'" style="font-size: 20px;"><span style="color:red; font-weight: bold;">['+item.collection_stories[0]['position']+']</span> <span style="color: #0f92d0;">'+item.id+' - '+item.name+'</span> <span title="xóa" style="cursor: pointer;" onclick="removeStory('+item.id+', '+item.collections[0].id+')">🗑️</span></p>'
+            return text
+          })
+          for(var i = 0; i < res.rows.length; i++) {            
+            var text = '<span id="item-story-'+res.rows[i].id+'"><button type="button" class="btn bg-olive margin">'+res.rows[i].name+'</button><span class="btn bg-danger" onclick="removeStory('+res.rows[i].id+', '+res.rows[i].categories[0].id+')">x</span></span>'
+            list.push(text);            
+          }
+          for(let j=1; j<=totalPage;j++){
+            let offset = (j-1)*res.limit
+            let text1 = `<button class="btn btn-sm btnpage" type="button" style="background-color:#2b9cec; font-size: 18px; color: white; margin-right: 5px;" id="pagination${j}" value=${j} onclick="paginationStory(${offset},${j})" >${j} </button>`
+            pagination.push(text1)             
+          }
+          $('#story-in-category').html(layoutListSmall.join(''))
+          $('#paginationStory').html(pagination.join(''))
+                    
+          $('#pagination'+page).css("background-color", "green")
+        } else {
+          $('#story-in-category1').html('')
+        }        
+      }
+    })
+  }

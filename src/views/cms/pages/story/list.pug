@@ -1,0 +1,138 @@
+extends ../../layouts/base
+block title
+  h1 Danh sách bài viết
+block content
+  - var admin_type = global.sessionAdmin ? global.sessionAdmin.type : 'admin'
+  .box
+    .box-body
+      .row
+        .col-lg-12.col-md-12
+          .buttons-toolbar
+          #toolbar
+            a.btn.btn-success.button-manager(href='/admin/story/add')
+              i.fa.fa-plus
+              |  Tạo
+            a.btn.btn-primary.button-manager(href='/admin/story/crawler_story')
+              i.fa.fa-plus
+              |  Add Crawler
+            button#remove_story.btn.btn-danger.button-manager(disabled='')
+              i.fa.fa-trash
+              |  Xóa 
+            a(href='').btn.btn-default.button-manager
+              i.fa.fa-refresh
+              |  Refresh
+            button#sync_to_cate.btn.btn-default.bg-maroon.button-manager
+              i.fa.fa-refresh
+              |  Đồng bộ số lượng truyện vào thể loại
+            button#sync_to_story.btn.btn-default.bg-orange.button-manager
+              i.fa.fa-refresh
+              |  Đồng bộ số lượng chương vào truyện
+          #box_filter_story(style="margin-top: 7px")
+            .row
+              .col-lg-2.col-md-2
+                label Tìm Kiếm
+                .form-group
+                  input#search.form-control(type='text' placeholder='Nhập tiêu đề bài viết' name='keySearch' autocomplete="off")
+              .col-lg-1.col-md-1
+                .form-group
+                  label.control-label Nguồn Crawler:
+                  select#fromId.select2.form-control.from-selection(name='fromId')
+                    option(value='') Tất cả
+                    option(value='sstruyen.com') sstruyen.com
+                    option(value='wattpad.vn') wattpad.vn
+                    option(value='truyenfull.vn') truyenfull.vn
+                    option(value='truyen.one') truyen.one
+                    option(value='truyenhay.com') truyenhay.com
+                    option(value='webtruyenfree.com') webtruyenfree.com
+                    option(value='webtruyen.com') webtruyen.com
+                    option(value='truyenngontinh18.com') truyenngontinh18.com
+              .col-lg-1.col-md-1
+                .form-group
+                  label.control-label Có chương:
+                  select#haveChapter.select2.form-control.have-chapter-selection(name='haveChapter')
+                    option(value='') Tất cả
+                    option(value='1') Có chương
+                    option(value='2') Không chương
+              - if (ssadmin && ssadmin.type && ['root', 'admin'].includes(ssadmin.type))
+                .col-lg-1.col-md-1
+                  .form-group
+                    label.control-label Tài Khoản:
+                    select#updatedBy.select2.form-control.collection-selection(name='updatedBy')
+                      option(value='') Tất cả
+                      -if (users)
+                        each cols in users
+                          option(value=cols.id) !{cols.name}
+              .col-lg-1.col-md-1
+                .form-group
+                  label.control-label Danh Mục:
+                  select#categoryId.select2.form-control.category-selection(name='categoryId')
+                    option(value='') Tất cả
+                    -if (categories)
+                      each cate in categories
+                        option(value=cate.id) !{cate.name}
+              - if (ssadmin && ssadmin.type && ['root', 'admin'].includes(ssadmin.type))
+                .col-lg-1.col-md-1
+                  .form-group
+                    label.control-label Bộ Sưu Tập:
+                    select#collectionId.select2.form-control.collection-selection(name='collectionId')
+                      option(value='') Tất Cả
+                      -if (collections)
+                        each cols in collections
+                          option(value=cols.id) !{cols.name}
+                .col-lg-1.col-md-1
+                  .form-group
+                    label Vị Trí Theo
+                    select#positionCategory.select2.form-control.positionCategory-selection(name='positionCategory')
+                      option(value='') . . .
+                      option(value='Focus') Focus
+                      option(value='Slide') Slide
+                      option(value='New') New
+                .col-lg-1.col-md-1
+                  .form-group
+                    label.control-label Top Lượt Xem
+                    select#view.select2.form-control.view-selection(name='view')
+                      option(value='') ...
+                      option(value='All') Từ trước đến nay
+                      option(value='10') 10 ngày gần nhất
+                      option(value='20') 20 ngày gần nhất
+              .col-lg-1.col-md-1
+                .form-group
+                  label Trạng Thái
+                  select#status.select2.form-control.status-selection(name='status')
+                    option(value='') Tất cả
+                    option(value='on') Đang hoạt động
+                    option(value='review') Chờ xét duyệt
+                    option(value='off') Tắt
+              .col-lg-1.col-md-1  
+                .form-group
+                  label Bắt Đầu
+                  .input-group.date
+                    .input-group-addon
+                      i.fa.fa-calendar
+                    input#start_date.datepicker.form-control.pull-right(type='text' name="start_date" autocomplete="off")
+              .col-lg-1.col-md-1  
+                .form-group
+                  label Kết Thúc
+                  .input-group.date
+                    .input-group-addon
+                      i.fa.fa-calendar
+                    input#end_date.datepicker.form-control.pull-right(type='text' name="end_date" autocomplete="off")            
+          table#table_story(data-buttons-toolbar='.buttons-toolbar' data-toolbar-align='unset' data-search='false' data-icons-prefix='fa' data-show-refresh='false' data-show-toggle='false' data-show-columns='true' data-show-export='true' data-detail-view='false' data-detail-formatter='detailFormatter' data-minimum-count-columns='2' data-show-pagination-switch='false' data-pagination='true' data-id-field='id' data-page-list='[30]' data-show-footer='false' data-side-pagination='server' data-url='/admin/story/ajax-list' data-query-params='queryParams' data-response-handler='responseHandler')
+    include ./model_story_status_publishAt
+  script.
+    var fields = [
+      {"field":"id","title":"id"}, 
+      {"field":"name","title":"Tiêu đề", "formatter":"titleCustom"}, 
+      {"field":"view","title":"Lượt xem"}, 
+      {"field":"imageSave","title":"Ảnh đại diện","formatter":"imageFormatter"},
+      {"field":"categories","title":"Thể loại", "formatter": "showCategories"}, 
+      {"field":"collections","title":"Bộ sưu tập", "formatter": "showCollections"}, 
+      {"field":"tags","title":"hashtags", "formatter": "showTags"}, 
+      {"field":"status","title":"Trạng thái", "formatter": "showStatus"},
+      {"field":"publishedAt","title":"Thời gian published" , "formatter" : "showTime"}
+    ]
+    var urlManager = '/admin/story';
+    var setLimitRow = 30;
+    var admin_type = `#{admin_type}`
+  include ./_tablejs
+  

@@ -1,0 +1,60 @@
+mixin form(data={})
+  form#form-permission(method='POST', action=(`/admin/permission/${data.id ? 'edit/'+data.id : 'add'}`), role='form')
+    if (data.id)
+      input(type='hidden' name='id', value=data.id)
+    .col-lg-12.col-md-12
+      .form-group(class=errors && errors.desc && 'has-error')
+        label.control-label name:
+        .input-data-block
+          input.form-control(name='name' type='text' value=(data.name ? data.name : '') placeholder='name')
+
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label type:
+        input.form-control(name='type' type='text' value=(data.type ? data.type : '') placeholder='type')
+
+
+    .col-lg-12.col-md-12
+      .form-group(class=errors && errors.desc && 'has-error')
+        label.control-label route:
+        .input-data-block
+          input.form-control(name='route' type='text' value=(data.route ? data.route : '') placeholder='route')
+
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label method:
+        select.select2.form-control(name='method' autocomplete="off")
+            option(value='GET' data-image='' selected=data.method===''?true:false) GET
+            option(value=' HEAD' data-image='' selected=data.method===''?true:false)  HEAD
+            option(value=' POST' data-image='' selected=data.method===''?true:false)  POST
+            option(value=' PUST' data-image='' selected=data.method===''?true:false)  PUST
+            option(value=' DELETE' data-image='' selected=data.method===''?true:false)  DELETE
+            option(value=' CONNECT' data-image='' selected=data.method===''?true:false)  CONNECT
+            option(value=' OPTIONS' data-image='' selected=data.method===''?true:false)  OPTIONS
+            option(value=' TRACE' data-image='' selected=data.method===''?true:false)  TRACE
+
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label content:
+        input.form-control(name='content' type='text' value=(data.content ? data.content : '') placeholder='content')
+
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label status:
+        select.select2.form-control(name='status' autocomplete="off")
+            option(value='on' data-image='' selected=data.status===''?true:false) on
+            option(value='off' data-image='' selected=data.status===''?true:false)  off
+
+
+    .col-lg-12.col-md-12
+      .form-group
+        button.btn.btn-success
+          i.fa.fa-check
+          |  Submit
+    include ../../layouts/modal-upload
+  include _validation
+  include _jsformload

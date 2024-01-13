@@ -1,0 +1,196 @@
+#modal-default2.modal.fade.in
+  .modal-dialog(style="width: 960px; margin: 30px auto;")
+    .modal-content
+      .modal-body
+        ul.nav.nav-tabs
+          li.active
+            a(href='#tab_1' data-toggle='tab' onclick="loadAds()") Danh sách QC đang đặt
+          li
+            a(href='#tab_2' data-toggle='tab') Tìm kiếm QC
+        .tab-content
+          label#ads-name(for='auto-search')
+          #tab_1.tab-pane.active
+            .form-group
+              input#auto-search-in-ads.form-control(type='text' placeholder='Nhập tên quảng cáo')
+              span(id="tbremove2" style="color:red; font-style: italic; font-weight:bold")
+              input#ads-id(type="hidden" name="adsId")              
+            table.table.table-bordered#story-in-ads(data-buttons-toolbar='.buttons-toolbar' data-toolbar-align='unset' data-search='false' data-icons-prefix='fa' data-show-refresh='false' data-show-toggle='false' data-show-columns='true' data-show-export='true' data-detail-view='false' data-detail-formatter='detailFormatter' data-minimum-count-columns='2' data-show-pagination-switch='false' data-pagination='true' data-id-field='id' data-page-list='[5,All]' data-show-footer='false' data-side-pagination='server' data-url='/admin/story/ajax-list' data-query-params='queryParams' data-response-handler='responseHandler')
+            #paginationStory
+          #tab_2.tab-pane
+            .form-group
+              input#auto-search-story-2.form-control(type='text' placeholder='Nhập tên quảng cáo' autocomplete="off")
+              input#ads-id(type="hidden" name="adsId")
+            table.table.table-bordered#story-list-search
+      .modal-footer
+        button.btn.btn-default(type='button' data-dismiss='modal') Close
+script.
+  $('.show-ads, .modal-footer .btn-default').on('click', function() {
+    $('#modal-default2').toggle();
+    loadAds()
+  });
+  $('#auto-search-story-2').keyup(function () {
+    loadSearch();
+  });
+
+  $('#auto-search-in-ads').keyup(function () {
+    loadAds();
+  });
+
+  function loadSearch() {
+    $.ajax({
+      url: '/admin/ads/ajax-category-list?keySearch='+$('#auto-search-story-2').val(),
+      success: function (res) {
+        console.log(res)
+        if (res.total) {
+          var list = [];
+          for(var i = 0; i < res.rows.length; i++) {
+            var text = '<span id="item-search-'+res.rows[i].id+'"><button type="button" class="btn bg-olive margin" onclick="addAdsToCategory('+res.rows[i].id+')">'+res.rows[i].name+' | '+res.rows[i].organization+'</button></span>'
+            list.push(text);
+          }
+          $('#story-list-search').html(list.join(''))
+        } else {
+          $('#story-list-search').html('')
+        }
+      }
+    })
+  }
+
+  function loadAds() {
+    $.ajax({      
+      url: '/admin/ads/ajax-category-list?adsPositionFx='+$('#category-slug').val(),
+      success: function (res) {
+        console.log(res)        
+        if (res.rows) {
+          let totalPage = res.total / res.limit 
+          let checkInterger = Number.isInteger(totalPage)
+          if(checkInterger == false){
+            totalPage = Math.floor(res.total / res.limit) + 1;            
+          }
+          else {
+            totalPage = Math.floor(res.total / res.limit);            
+          }
+          var pagination =[];
+          var list = [];
+          for(var i = 0; i < res.rows.length; i++) {            
+            var text = '<strong style="dislplay: inline-block;"><span id="item-story-2-'+res.rows[i].id+'"><button type="button" class="btn bg-olive margin">'+res.rows[i].ad.name+' | '+res.rows[i].ad.organization+'</button><span class="btn" onclick="removeAdsToCategory('+res.rows[i].id+')" style="padding: 4px; margin: 11px 3px; border: 2px solid #909090; border-radius: 4px;" ><i style="color: #909090;"" class="fa fa-fw fa-trash"></i></span></span></strong>'
+            list.push(text);            
+          }
+          for(let j=1; j<=totalPage;j++){
+            let offset = (j-1)*res.limit
+            let text1 = `<button class="btn btn-sm btnpage" type="button" style="background-color:gray" id="pagination${j}" value=${j} onclick="paginationStory(${offset},${j})">${j}</button>`
+            pagination.push(text1)             
+          }
+          console.log('list', list)
+          $('#story-in-ads').html(list.join(''))
+          $('#paginationStory').html(pagination.join(''))
+        } else {
+          $('#story-in-ads').html('')
+        }
+      }
+    })
+  }
+  function addAdsToCategory (id) {
+    Swal.fire({
+      title: 'Bạn có chắc chắn thêm Quảng cáo này?',
+      text: "Dữ liệu được thêm vào nổi bật của category trang chủ!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#969696',
+      confirmButtonText: 'ĐỒNG Ý',
+      cancelButtonText: 'HỦY BỎ',
+    }).then((result) => {
+      if (result.value) {
+        $.ajax({
+          url: '/admin/ads/add-ads-to-region',
+          method: 'post',
+          data: {
+            categoryId: $('#id-category').val(),
+            position: 'Category_detail|'+$('#category-slug').val(),
+            adsId: id
+          },
+          success: function (res) {
+            $.notify("Success", { position:"bottom right", className: "success" });
+          }
+        })
+      }          
+    })
+  }
+  
+  function removeAdsToCategory (adsReferId) {
+    Swal.fire({
+      title: 'Bạn có chắc chắn xóa?',
+      text: "Dữ liệu được chọn sẽ bị xóa khỏi vị trí đã chọn!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#969696',
+      confirmButtonText: 'ĐỒNG Ý',
+      cancelButtonText: 'HỦY BỎ',
+    }).then((result) => {
+      if (result.value) {
+        $('#tbremove2').text('')
+        $.ajax({
+          url: '/admin/ads/remove-ads-out-region',
+          method: 'delete',
+          data: {
+            adsReferId: adsReferId
+          },
+          success: function (res) {
+            console.log(res)
+            if(res == "Xóa thành công"){
+              $.notify("Success", { position:"bottom right", className: "success" });
+              $('#item-story-2-'+adsReferId).remove();
+            }
+            else{
+              $('#tbremove2').text("Error! Bài viết hiện tại đang chỉ thuộc thể loại trên, bạn vui lòng không xóa bài viết khỏi thể loại này!");
+            }
+          }
+        })
+      }          
+    })
+  }
+
+  function paginationStory(offset,page){     
+      $('#savevaluepagination2').val(page)
+      let value =  $('#savevaluepagination2').val()      
+      let x = document.querySelectorAll(".btnpage")      
+      for (i = 0; i < x.length; i++) {
+        x[i].style.backgroundColor = "gray"              
+      }      
+      $.ajax({
+        url: '/admin/story/ajax-list?adsId='+$('#ads-id1').val()+'&keySearch='+$('#auto-search-in-ads').val()+'&offset='+offset,
+        success: function (res) { 
+        if (res.rows) {        
+          let totalPage = res.total / res.limit 
+          let checkInterger = Number.isInteger(totalPage)
+          if(checkInterger == false){
+            totalPage = Math.floor(res.total / res.limit) + 1;            
+          }
+          else{
+            totalPage = Math.floor(res.total / res.limit);            
+          }
+          var pagination =[];
+          var list = [];
+          for(var i = 0; i < res.rows.length; i++) {            
+            var text = '<span id="item-story-2-'+res.rows[i].id+'"><button type="button" class="btn bg-olive margin">'+res.rows[i].name+'</button><span class="btn bg-danger" onclick="removeStory('+res.rows[i].id+', '+res.rows[i].categories[0].id+')">x</span></span>'
+            list.push(text);            
+          }
+          for(let j=1; j<=totalPage;j++){
+            let offset = (j-1)*res.limit
+            let text1 = `<button class="btn btn-sm btnpage" type="button" style="background-color:gray" id="pagination${j}" value=${j} onclick="paginationStory(${offset},${j})" >${j} </button>`
+            pagination.push(text1)             
+          }
+          $('#story-in-ads').html(list.join(''))
+          $('#paginationStory').html(pagination.join(''))
+                    
+          $('#pagination'+page).attr("style","background-color:green")
+          
+        } else {
+          $('#story-in-ads').html('')
+        }        
+      }
+    })
+  }
+  
+    

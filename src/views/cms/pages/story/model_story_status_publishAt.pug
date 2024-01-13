@@ -1,0 +1,121 @@
+- var adminss = global.sessionAdmin
+#myModalStatusPublishAt.modal
+  .modal-dialog
+    .modal-content
+      .modal-header
+        span.modal-title(style="font-size:18px") Cập nhật thời gian Published (Tháng/Ngày/Năm Giờ:Phút AM/PM) &nbsp;           
+      .modal-body(style="margin-bottom:10px")
+        input(id='showStoryId' type='hidden')
+        input(id='publishedAt' type='hidden')
+        input(id='idStatus' type='hidden')
+        .block-wrap.block-current-date
+          //- <input type="text" value="2014/03/15 05:06" id="datetimepicker">
+          span(style='font-weight: bold; margin-right: 40px;') Thời gian đã đặt
+          span(id='currentTime' style='font-weight: bold; color: green; font-size: 18px;') Chưa cài đặt 
+          br
+        .block-wrap.block-new-date                      
+          span(style='font-weight: bold;') Cài đặt mới thời gian           
+          input.form-control(style='width: 309px; display: inline; font-weight: bold; color: red; font-size: 18px;' id= 'inputshow' name='publishedAtModel' value="")
+          span(style='margin-left: 10px; font-weight: bold;')
+          button.btn.btn-success.btnNow( type='button' style="font-weight: bold; margin: 6px 10px 10px 0;" data='apply_date') Apply
+          br
+          span.text-warning (Khi có <strong>Thời gian đã đặt</strong>, Hành động <strong>"Apply"</strong> sẽ nhận thời gian đó nếu không <strong>Cài đặt mới thời gian</strong>)
+        br
+        .block-wrap.block-with-user
+        -if (adminss.type == 'admin') 
+          button.btn.bg-aqua-active.color-palette.btnNow.btn-on(type='button' style="font-weight: bold; margin: 10px 10px 10px 0;" data='on') Bật Ngay
+          |
+          button.btn.bg-maroon-active.color-palette.btnNow.btn-approved.for-writer(type='button' style="font-weight: bold; margin: 10px;" data='approved') Duyệt Bài Viết
+          |
+          button.btn.bg-yellow-active.color-palette.btnNow.btn-need_edit.for-writer(type='button' style="font-weight: bold; margin: 10px;" data='need_edit') Y/c Sửa Lại
+          |
+          button.btn.bg-red-active.color-palette.btnNow.btn-off(type='button' style="font-weight: bold; margin: 10px;" data='off') Tắt Tạm Thời
+        -else
+          button.btn.bg-yellow-active.color-palette.btnNow.btn-review(type='button' style="font-weight: bold; margin: 10px;" data='review') Gửi Review Ngay
+          button.btn.bg-gray-active.color-palette.btnNow.btn-draft(type='button' style="font-weight: bold; margin: 10px;" data='draft') Về  Bản Chỉnh Sửa
+      .modal-footer
+        button.btn.btncancelshow(style='color: white; background-color:#7d7d7d; font-weight: bold;' data-dismiss='modal') Cancel
+script(type='text/javascript').
+  $(function () {
+    $('#inputshow').datetimepicker({format:'Y-m-d H:i:00', step: 15, monthChangeSpinner:true});
+  })
+  $('#myModalStatusPublishAt').on('hidden.bs.modal', function () {
+    $('#inputshow').val('')
+    $('#publishedAt').val('')
+    $('#currentTime').text('Chưa cài đặt')
+    $('.btnNow').show()
+  })
+  $('.btnNow').on('click', function() {       
+    let storyId = $('#showStoryId').val()
+    let dateInput = $('#inputshow').val()
+    let dataValue = $(this).attr('data')
+    let publishedAt = $('#publishedAt').val()
+    let currentTimeText = $('#currentTime').text()
+    let idStatus = $('#idStatus').val()
+    if (dataValue == 'apply_date') {
+      if (!dateInput) {
+        $.notify('"Cài đặt mới thời gian" chưa được set', { position:"top right", className: "error" });
+      } else {
+        if (publishedAt == dateInput) {
+          return;
+        }
+        if (!currentTimeText.includes('Chưa cài đặt')) {
+          Swal.fire({
+            title: 'Bạn có chắc chắn cài đặt lại giờ xuất bản?',
+            icon: 'warning',
+            showCancelButton: true
+          }).then((result) => {
+            if (result.value) {
+              $('#publishedAt').val(dateInput)
+              $('#currentTime').html(' '+dateInput+'<span id="reset-date" style="color: orange; cursor: pointer;" title="Reset cài đặt thời gian">&nbsp;[x]</span>')
+            }
+          })
+        } else {
+          $('#publishedAt').val(dateInput)
+          $('#currentTime').html(' '+dateInput+'<span id="reset-date" style="color: orange; cursor: pointer;" title="Reset cài đặt thời gian">&nbsp;[x] </span>')
+        }
+      }
+    } else {
+      if (dataValue == 'review' && !publishedAt) {
+        $.notify('"Cài đặt mới thời gian" chưa được set', { position:"top right", className: "error" });
+        return
+      } else {
+        let swalconfig = {
+          title: 'Bạn có chắc chắn cài đặt lại trạng thái tin tức?',
+          icon: 'warning',
+          showCancelButton: true
+        }
+        if (dataValue == 'need_edit') {
+          swalconfig = {...swalconfig, ...{title: 'Bạn có chắc chắn yêu cầu sửa lại?',input: 'textarea', inputPlaceholder: 'Thông báo lý do cần sửa đến người viết bài', inputAttributes: {'aria-label': 'Thông báo lý do cần sửa đến người viết bài'}}}
+        }
+        Swal.fire(swalconfig).then((result) => {
+          if (result.value) {
+            $.ajax(
+            {
+              url: "/story/updatePublishedAt",    
+              method: "post",
+              data:
+              {
+                storyid: storyId,
+                statusNew: dataValue,
+                publishedAt: publishedAt,
+                reasonband: result.value
+              },
+              success: function (res) {   
+                $('#myModalStatusPublishAt').modal('toggle')           
+                if(!res.code) {                
+                  $('#change-status-'+storyId).removeAttr('onclick')
+                  $('#change-status-'+storyId).text('Chờ Refresh Trang')
+                  $.notify(res.msg, { position:"bottom right", className: "success" });
+                } else {
+                  $.notify(res.msg, { position:"top right", className: "error" });
+                }                              
+              }
+            }); 
+          }
+        })
+      }
+    }
+  });
+
+    

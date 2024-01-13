@@ -1,0 +1,64 @@
+extends ../../layouts/base
+block title
+  h1 Danh sách quảng cáo
+block content
+  .box
+    .box-body
+      .row
+        .col-lg-12.col-md-12
+          .buttons-toolbar
+          #toolbar
+            a.btn.btn-success.button-manager(href='/admin/ads/add')
+              i.fa.fa-plus
+              |  Tạo
+            button#remove_story.btn.btn-danger.button-manager(disabled='')
+              i.fa.fa-trash
+              |  Xóa 
+            a(href='').btn.btn-default.button-manager
+              i.fa.fa-refresh
+              |  Refresh 
+          #box_filter_story(style="margin-top: 7px")
+            .row
+              .col-lg-2.col-md-2
+                label Tìm kiếm
+                .form-group
+                  input#search.form-control(type='text' placeholder='Nhập tiêu đề bài viết' name='keySearch' autocomplete="off")
+              .col-lg-2.col-md-2
+                .form-group
+                  label Trạng thái
+                  select#status.select2.form-control.status-selection(name='status')
+                    option(value='') Tất cả
+                    option(value='on') Đang hoạt động
+                    option(value='review') Chờ xét duyệt
+                    option(value='off') Tắt             
+              //- .col-lg-2.col-md-2  
+              //-   .form-group
+              //-     label Bắt đầu
+              //-     .input-group.date
+              //-       .input-group-addon
+              //-         i.fa.fa-calendar
+              //-       input#start_date.datepicker.form-control.pull-right(type='text' name="start_date" autocomplete="off")
+              //- .col-lg-2.col-md-2  
+              //-   .form-group
+              //-     label Kết thúc
+              //-     .input-group.date
+              //-       .input-group-addon
+              //-         i.fa.fa-calendar
+              //-       input#end_date.datepicker.form-control.pull-right(type='text' name="end_date" autocomplete="off")            
+          table#table_story(data-buttons-toolbar='.buttons-toolbar' data-toolbar-align='unset' data-search='false' data-icons-prefix='fa' data-show-refresh='false' data-show-toggle='false' data-show-columns='true' data-show-export='true' data-detail-view='false' data-detail-formatter='detailFormatter' data-minimum-count-columns='2' data-show-pagination-switch='false' data-pagination='true' data-id-field='id' data-page-list='[30]' data-show-footer='false' data-side-pagination='server' data-url='/admin/ads/ajax-list' data-query-params='queryParams' data-response-handler='responseHandler')
+    include ./_model_ads_position.pug
+  script.
+    var fields = [
+      {"field":"id","title":"id"}, 
+      {"field":"name","title":"Tiêu đề"},
+      {"field":"slug","title":"Slug"},
+      {"field":"imageShow","title":"Ảnh đại diện","formatter":"imageFormatter"},      
+      {"field":"type","title":"Kiểu đặt"},
+      {"field":"view","title":"Lượt click"},
+      {"field":"parentId","title":"Vị trí cài đặt", "formatter" : "displayParent"} ,         
+      {"field":"status","title":"Trạng thái", "formatter": "showStatus"}       
+    ]
+    var urlManager = '/admin/ads';
+    var setLimitRow = 30;
+  include ./_tablejs
+  

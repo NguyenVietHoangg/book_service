@@ -1,0 +1,84 @@
+.modal.fade.modal-upload-form#wrap-upload(data-backdrop='static' data-keyboard='false')
+  .modal-dialog.modal-lg
+    .modal-content
+      .modal-diaglog.modal-lg
+        .modal-diaglog.modal-lg
+          .modal-content.modal-uploader
+            .modal-header
+              button.close(type='button' data-dismiss='modal' aria-hidden='true') &times;
+              h4.modal-title Ảnh
+            .panel-body
+              .btn-group.nav-control(style='left: 18%;')
+                a.btn.btn-success#choose-mylibrary.tabtab(href='javascript:;')
+                  i.fa.fa-picture-o  Thư viện
+                a.btn.btn-default#choose-mycomputer.tabtab(href='javascript:;')
+                  i.fa.fa-desktop  Upload ảnh từ máy
+                a.btn.btn-primary#choose-myurl.tabtab(href='javascript:;')
+                  i.fa.fa-chain  Upload ảnh từ link
+                a.btn.btn-primary#choose-cropfx.tabtab(href='javascript:;')
+                  i.fa.fa-chain  CropFX
+            .modal-body.modal-upload#mylibrary
+              include table-image
+              #mylibrarymain
+            .modal-body.modal-upload#mycomputer
+              .uploader
+                .demo-wrap.upload-demo
+                  .browser
+                    label
+                      span Kéo thả ảnh vào đây hoặc bấm vào để mở trình duyệt chọn
+                        input#upload.file-modal-upload(type='file' name='file' accept='image/*' multiple='multiple' title='click to add Files')
+                    .title-file 
+                  br
+              .row
+                .col-md-12
+                  .form-group
+                    input.form-control#idNameUpload(style='border: 2px #c3781a solid;' type='text' placeholder='Đặt tên tên ảnh gợi nhớ')
+                  .form-group
+                    label Crop ảnh &nbsp;
+                    input.minimal#crop_enable.crop_enable(type='checkbox')
+              br
+              .base-64-img-set(style="display:none")
+              #upload-demo(style='margin: 0 auto; text-align: center;')
+            .modal-body.modal-upload#myurl
+              .form-group
+                label(style="color: red") Link ảnh
+                input.form-control#idUrl(type='text' placeholder='url')
+              .form-group
+                label Tiêu đề
+                input.form-control#idTitle(type='text' placeholder='tiêu đề')
+            .modal-body.wartermark-set
+              .form-group
+                label Watermark &nbsp;
+                input.minimal#is_watermark(type='checkbox')
+              .form-group#block_watermartk(style="display:none")
+                label Text watermark (option)
+                input.form-control#text_watermark(type='text' placeholder='url')
+            .modal-body.modal-upload#cropfx(style="width: 100%; height: 600px;")
+              .form-group
+                //- label(style="color: red") Nội dung
+                #iframe_crop
+                  iframe#iframe(src='/admin/media/cropper' title='W3Schools Free Online Web Tutorials' width="100%" height="550px")
+            .loading-upload(style="display:none")
+            .modal-footer
+              button.btn.btn-default.pull-left#closed-modal(data-dismiss='modal') Đóng
+              button.btn.btn-primary.upload-result(type='button')#apply-upload Chấp thuận
+script.
+  $(function() {
+    $('input#crop_enable').on('ifChanged', function(event){
+      var crop_enable = $('input#crop_enable').is(':checked');
+      if (crop_enable) {
+        $('#upload-demo').show();
+      } else {
+        $('#upload-demo').hide();
+      }
+    });
+    $('input#is_watermark').on('ifChanged', function(event){
+      var is_watermark = $('input#is_watermark').is(':checked');
+      if (is_watermark) {
+        $('#block_watermartk').show();
+      } else {
+        $('#block_watermartk').hide();
+        $('#text_watermark').val('');
+      }
+    });
+  });

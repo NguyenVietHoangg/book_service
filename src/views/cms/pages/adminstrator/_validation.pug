@@ -1,0 +1,45 @@
+block content
+  script(type='text/javascript').
+    //summernote
+    $(function () {
+      jQuery.validator.addMethod("checkPassword", function (value, element, params) {
+        const regex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,32}$/
+        return value.match(regex)
+      },'Mật khẩu phải 8-30 ký tự');
+      $( "#form_data" ).validate( {
+        rules: {
+          email: {
+            required: true,
+            email: true
+          },
+          password: {
+            required: true,
+            checkPassword: true
+          }
+        },
+        messages: {
+          email: "Nhập đúng chuẩn email",
+          password: "Mật khẩu phải 8-30 ký tự, bao gồm chữ cái, số và ký tự đặc biệt"
+        },
+        errorElement: "em",
+        errorPlacement: function ( error, element ) {
+          // Add the `help-block` class to the error element
+          error.addClass( "help-block" );
+          if ( element.prop( "type" ) === "checkbox" ) {
+            error.insertAfter( element.parent( "label" ) );
+          } else {
+            error.insertAfter( element );
+          }
+        },
+        highlight: function ( element, errorClass, validClass ) {
+          $( element ).parents( ".input-data-block" ).addClass( "has-error" ).removeClass( "has-success" );
+        },
+        unhighlight: function (element, errorClass, validClass) {
+          $( element ).parents( ".input-data-block" ).addClass( "has-success" ).removeClass( "has-error" );
+        },
+        submitHandler: function(form) {
+          const id = $('#id').val() ? $('#id').val() : null
+          updateForm(form,id)
+        }
+      } );
+    })

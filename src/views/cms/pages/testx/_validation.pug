@@ -1,0 +1,50 @@
+block content
+  script(type='text/javascript').
+    $(function () {
+      // phần này sẽ là validation cơ bản cho các input của form
+          $('.select2').select2({
+      templateResult: formatState,
+      templateSelection: formatState
+    });
+
+    function formatState (opt) {
+      var optimage = $(opt.element).attr('data-image'); 
+      if(!optimage){
+      return opt.text;
+      } else {                    
+          var $opt = $(
+          '<span><img src="' + optimage + '" width="18px" /> ' + opt.text + '</span>'
+          );
+          return $opt;
+      }
+    };
+    $('.summernote').summernote({
+      height: 350, 
+      codemirror: { 
+        theme: 'monokai'
+      }
+    });
+      $( "#form-testx" ).validate({
+        rules: {
+        name_1: {required: true}
+        },
+        messages: {
+        name_1: 'Please enter name_1'
+        },
+        errorElement: "em",
+        errorPlacement: function ( error, element ) {
+          error.addClass( "help-block" );
+          if ( element.prop( "type" ) === "checkbox" ) {
+            error.insertAfter( element.parent( "label" ) );
+          } else {
+            error.insertAfter( element );
+          }
+        },
+        highlight: function ( element, errorClass, validClass ) {
+          $( element ).parents( ".input-data-block" ).addClass( "has-error" ).removeClass( "has-success" );
+        },
+        unhighlight: function (element, errorClass, validClass) {
+          $( element ).parents( ".input-data-block" ).addClass( "has-success" ).removeClass( "has-error" );
+        }
+      });
+    })

@@ -1,0 +1,23 @@
+extends ../../layouts/base
+
+block title
+  h1 Sửa category
+
+block content
+  <div class="row">
+    <div class="col-md-12">
+      <div class="box">
+        <div class="box-body">
+          include ./_form
+          +form(data ? data : {})
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  script(type='text/javascript').
+    $(function () {      
+      initUploadAws('icon', {open: false, src: '#{data.icon}'}, true);
+      initUploadAws('images', {open: false, src: '#{data.images}'}, true);
+    });
+    

@@ -1,0 +1,56 @@
+extends ../../layouts/base
+block title
+  h1 testx
+block content
+  .box
+    .box-body
+      .row
+        .col-lg-12.col-md-12
+          .buttons-toolbar
+          #toolbar
+            a.btn.btn-success.button-manager(href='/admin/testx/add')
+              i.fa.fa-plus
+              |  Create
+            button#remove_testx.btn.btn-danger.button-manager(disabled='')
+              i.fa.fa-trash
+              |  Delete
+            a(href='').btn.btn-default.button-manager
+              i.fa.fa-refresh
+              |  Refresh
+          .row#box_filter_testx(style="margin-top: 7px")
+            .col-lg-4.col-md-4
+              label Key search
+              .form-group
+                input#search.form-control(type='text' placeholder='title...' name='search' autocomplete="off")
+            .col-lg-2.col-md-2
+              .form-group
+                label With
+                select#order.select2.form-control.status-selection(name='order')
+                  option(value='') ALL
+                  option(value='0') Status
+            .col-lg-2.col-md-2
+              .form-group
+                label Start Date
+                .input-group.date
+                  .input-group-addon
+                    i.fa.fa-calendar
+                  input#start_date.datepicker.form-control.pull-right(type='text' name="start_date" autocomplete="off")
+            .col-lg-2.col-md-2
+              .form-group
+                label End Date
+                .input-group.date
+                  .input-group-addon
+                    i.fa.fa-calendar
+                  input#end_date.datepicker.form-control.pull-right(type='text' name="end_date" autocomplete="off")
+            .col-lg-2.col-md-2
+              .form-group
+                button(style='margin-top: 25px;')#filter_testx.btn.btn-primary(type='submit')
+                  i.fa.fa-filter
+                  |  Filter
+          table#table_testx(data-buttons-toolbar='.buttons-toolbar' data-toolbar-align='unset' data-search='false' data-icons-prefix='fa' data-show-refresh='false' data-show-toggle='false' data-show-columns='true' data-show-export='true' data-detail-view='false' data-detail-formatter='detailFormatter' data-minimum-count-columns='2' data-show-pagination-switch='false' data-pagination='true' data-id-field='id' data-page-list='[30]' data-show-footer='false' data-side-pagination='server' data-url='/admin/testx/ajax-list' data-query-params='queryParams' data-response-handler='responseHandler')
+  script.
+    //- var fields = [{field: 'name'}, {field: 'avatar', formatter: 'imageFormatter'}, {field: 'status'}];
+    var fields = [{"field":"name_1","title":"Tên 1 - input_simple"},{"field":"name_2","title":"Tên_2 - input_select"},{"field":"name_3","title":"Tên 3 - input_select_multiple"},{"field":"name_4","title":"Tên 4 - input_checkbox"},{"field":"name_5","title":"Tên 5 - input_radio"},{"field":"name_6","title":"Tên 6 - input_daterange_picker"},{"field":"name_7","title":"Tên 7 - input_datetimerange_picker"},{"field":"name_8","title":"Tên 8 - input_daterange_button"},{"field":"name_9","title":"Tên 9 - input_timepicker"},{"field":"name_10","title":"Tên 10 - input_datepicker"},{"field":"name_11","title":"Tên 11 - input_upload","formatter":"imageFormatter"},{"field":"name_12","title":"Tên 12 - input_upload_multiple","formatter":"imageFormatter"},{"field":"name_13","title":"Tên 13 - input_textarea"}]
+    var urlManager = '/admin/testx';
+    var setLimitRow = 30;
+  include ./_tablejs

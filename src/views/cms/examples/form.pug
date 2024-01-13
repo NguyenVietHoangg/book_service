@@ -1,0 +1,44 @@
+mixin form(data={})
+  form(method='POST', action=(data.id ? '/menu/update/' + data.id : '/menu/create'), role='form')
+    .row
+      .col-lg-6.col-md-6
+        .form-group(class=errors && errors.title && 'has-error')
+          label.control-label Title: 
+          input.form-control(name='title' type='text', value=(data.title ? data.title : ''), placeholder='Title ...')
+          if errors && errors.title
+            span.help-block #{errors.title.msg}
+      .col-lg-6.col-md-6
+        .form-group(class=errors && errors.route && 'has-error')
+          label.control-label Route: 
+          input.form-control(name='route' type='text', value=(data.route ? data.route : ''), placeholder='Route ...')
+          if errors && errors.route
+            span.help-block #{errors.route.msg}
+    .row
+      .col-lg-6.col-md-6
+        .form-group(class=errors && errors.icon && 'has-error')
+          label.control-label Icon: 
+          input.form-control(name='icon' type='text', value=(data.icon ? data.icon : ''), placeholder='Icon ...')
+          if errors && errors.icon
+            span.help-block #{errors.icon.msg}
+      .col-lg-6.col-md-6
+        .form-group
+          label.control-label Parent: 
+          select.menu-parent-selection.form-control(name='parent' data-placeholder="Select parent", multiple=false)
+    .row
+      .col-lg-6.col-md-6
+        .form-group(class=errors && errors.description && 'has-error')
+          label.control-label Description: 
+          textarea.form-control(name='description' type='text', value=(data.description ? data.description : ''), placeholder='Description ...')
+          if errors && errors.description
+            span.help-block #{errors.description.msg}
+      .col-lg-6.col-md-6
+        .form-group
+          label.control-label Trạng thái: 
+          select.status-selection.form-control.select-status(name='status')
+            option(value='1' data-image='/images/on.png') Mở
+            option(value='0' data-image='/images/off.png') Đóng
+    .form-group
+      button.btn.btn-success
+        i.fa.fa-check
+        |  Submit
+

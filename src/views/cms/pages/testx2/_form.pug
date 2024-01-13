@@ -1,0 +1,123 @@
+mixin form(data={})
+  form#form-testx2(method='POST', action=(`/admin/testx2/${data.id ? 'edit/'+data.id : 'add'}`), role='form')
+    if (data.id)
+      input(type='hidden' name='id', value=data.id)
+    .col-lg-12.col-md-12
+      .form-group(class=errors && errors.desc && 'has-error')
+        label.control-label Tên 1 - input_simple:
+        .input-data-block
+          input.form-control(name='name_1' type='text' value=(data.name_1 ? data.name_1 : '') placeholder='name_1')
+
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label Tên_2 - input_select:
+        select.select2.form-control(name='name_2' autocomplete="off")
+            option(value='value_1' data-image='' selected=data.name_2===''?true:false) value_1
+            option(value=' value_2' data-image='' selected=data.name_2===''?true:false)  value_2
+            option(value=' value_3' data-image='' selected=data.name_2===''?true:false)  value_3
+
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label Tên 3 - input_select_multiple:
+        select.select2.form-control(name='name_3' multiple=true)
+            option(value='value_1' data-image='' selected=data.name_3===''?true:false) value_1
+            option(value=' value_2' data-image='' selected=data.name_3===''?true:false)  value_2
+            option(value=' value_3' data-image='' selected=data.name_3===''?true:false)  value_3
+            option(value=' value_4' data-image='' selected=data.name_3===''?true:false)  value_4
+
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label Tên 4 - input_checkbox:
+        input.minimal(type='checkbox' checked=(data.name_4 || data.name_4 === 1) name='name_4' value='1')
+
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label Tên 5 - input_radio:
+            input.minimal(type='radio' name='name_5' checked='1') 
+            label.radio-cus radio 1
+            input.minimal(type='radio' name='name_5' checked='2') 
+            label.radio-cus radio 2
+
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label Tên 6 - input_daterange_picker:
+          .input-group
+            .input-group-addon
+              i.fa.fa-calendar
+            input.reservation.form-control.pull-right(type='text' name='name_6' autocomplete="off")
+
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label Tên 7 - input_datetimerange_picker:
+          .input-group
+            .input-group-addon
+              i.fa.fa-calendar
+            input.reservationtime.form-control.pull-right(type='text' name='name_7' autocomplete="off")
+
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label Tên 8 - input_daterange_button:
+        .input-group
+      button.daterange-btn.btn.btn-default.pull-right(type='button' name='name_8' autocomplete="off")
+        span
+          i.fa.fa-calendar
+          |  Date range picker
+        i.fa.fa-caret-down
+
+
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label Tên 9 - input_timepicker:
+          .input-group
+            input.form-control.timepicker(type='text' name='name_9' autocomplete="off")
+            .input-group-addon
+              i.fa.fa-clock-o
+
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label Tên 10 - input_datepicker:
+        .input-group.date
+          .input-group-addon
+            i.fa.fa-calendar
+          input.datepicker.form-control.pull-right(type='text' name='name_10' autocomplete="off")
+
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label Tên 11 - input_upload:
+        .row#wrap-upload-name_11
+        a.btn.btn-default#render-name_11(href='javascript:;' onclick="initUploadAws('name_11')") Choose image &nbsp;
+          i.fa.fa-image
+
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label Tên 12 - input_upload_multiple:
+        .row#wrap-upload-name_12
+        a.btn.btn-default#render-name_12(href='javascript:;' onclick="initUploadAws('name_12', '', 'true')") Choose image &nbsp;
+          i.fa.fa-image
+
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label Tên 13 - input_textarea:
+        textarea.summernote(name='desc')
+
+
+    .col-lg-12.col-md-12
+      .form-group
+        button.btn.btn-success
+          i.fa.fa-check
+          |  Submit
+    include ../../layouts/modal-upload
+  include _validation
+  include _jsformload

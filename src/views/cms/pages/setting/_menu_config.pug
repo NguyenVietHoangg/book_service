@@ -1,0 +1,157 @@
+mixin form(data={})
+    // the css in the <head>
+    link(rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css')
+    link(rel='stylesheet' href='https://use.fontawesome.com/releases/v5.3.1/css/all.css')
+    link(rel='stylesheet' href='/admin/plugins/Drag-Drop-Menu-Builder-For-Bootstrap/bootstrap-iconpicker/css/bootstrap-iconpicker.min.css')
+    // (Recommended) Just before the closing body tag </body>
+    script(type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js')
+    script(type='text/javascript' src='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.bundle.min.js')
+    script(type='text/javascript' src='/admin/plugins/Drag-Drop-Menu-Builder-For-Bootstrap/bootstrap-iconpicker/js/iconset/fontawesome5-3-1.min.js')
+    script(type='text/javascript' src='/admin/plugins/Drag-Drop-Menu-Builder-For-Bootstrap/bootstrap-iconpicker/js/bootstrap-iconpicker.min.js')
+    script(type='text/javascript' src='/admin/plugins/Drag-Drop-Menu-Builder-For-Bootstrap/jquery-menu-editor.min.js')
+    .container
+      .row
+        .col-md-6
+          .card.mb-3
+            .card-header
+              h5.float-left #{data.name}
+              //- .float-right
+                button#btnReload.btn.btn-outline-secondary(type='button')
+                  i.fa.fa-play
+                  |  Load Data
+            .card-body
+              ul#myEditor.sortableLists.list-group
+          p
+            | Click show data
+          .card
+            .card-header
+              | JSON Output
+              .float-right
+                button#btnOutput.btn.btn-success(type='button')
+                  i.fas.fa-check-square
+                  |  Output
+            .card-body
+              .form-group
+                textarea#out.form-control(cols='50' rows='10' readonly)
+        .col-md-6
+          .card.border-primary.mb-3.edit-item-menu-fix
+            .card-header.bg-primary.text-white Edit item
+            .card-body
+              form#frmEdit.form-horizontal
+                .form-group
+                  label(for='text') Quyền xem menu (root,admin,partner,custom)
+                  .input-group
+                    input#text.form-control.item-menu(type='text' name='text' placeholder='quyền xem' value='root,admin,partner,custom')
+                    //- .input-group-append
+                    //-   button#myEditor_icon.btn.btn-outline-secondary.iconpicker.dropdown-toggle(type='button')
+                    //-     i.empty
+                    //-   input(type='hidden' value='empty')
+                      span.caret
+                  input.item-menu(type='hidden' name='icon')
+                .form-group
+                  label(for='href') URL
+                  input#href.form-control.item-menu(type='text' name='href' placeholder='URL')
+                .form-group
+                  label(for='target') Target
+                  select#target.form-control.item-menu(name='target')
+                    option(value='_self') Self
+                    option(value='_blank') Blank
+                    option(value='_top') Top
+                .form-group
+                  label(for='title') Tooltip
+                    data.menuList
+                  input#title.form-control.item-menu(type='text' name='title' placeholder='Tooltip')
+            .card-footer
+              button#btnUpdate.btn.btn-primary(type='button' disabled='disabled' style='margin-right: 5px')
+                i.fas.fa-sync-alt
+                |  Update
+              button#btnAdd.btn.btn-success(type='button')
+                i.fas.fa-plus
+                |  Add
+    br             
+    button#btnSave.btn.btn-primary(type='button')
+      i.fas.fa-save
+      |   Save
+    script.
+      jQuery(document).ready(function () {
+        $('.navbar-static-top').css({"justify-content": "inherit", "padding": "0"});
+        /* =============== DEMO =============== */
+        // menu items
+        var content = !{data.content};
+        var arrayjson = '[]';
+        if (content && content != '') {
+          arrayjson = content;
+        }
+        // icon picker options
+        var iconPickerOptions = {searchText: "Buscar...", labelHeader: "{0}/{1}"};
+        // sortable list options
+        var sortableListOptions = {
+        placeholderCss: {'background-color': "#cccccc"}
+        };
+        var editor = new MenuEditor('myEditor', {listOptions: sortableListOptions, iconPicker: iconPickerOptions});
+        editor.setForm($('#frmEdit'));
+        editor.setData(arrayjson);
+        editor.setUpdateButton($('#btnUpdate'));
+        $('#btnReload').on('click', function () {
+        editor.setData(arrayjson);
+        });
+        $('#btnOutput').on('click', function () {
+        var str = editor.getString();
+        $("#out").text(str);
+        });
+        $("#btnUpdate").click(function(){
+        editor.update();
+        });
+        $('#btnAdd').click(function(){
+        editor.add();
+        });
+        /* ====================================== */
+        /** PAGE ELEMENTS **/
+        $('[data-toggle="tooltip"]').tooltip();
+        $.getJSON( "https://api.github.com/repos/davicotico/jQuery-Menu-Editor", function( data ) {
+        $('#btnStars').html(data.stargazers_count);
+        $('#btnForks').html(data.forks_count);
+        });
+        var id_setting = !{data.id}
+        $('#btnSave').click(function () {
+          Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, updated it!'
+          }).then((result) => {
+            if (result.value) {
+              var content = $("#out").text()
+              if (!content || content === undefined || content === '') {
+                Swal.fire({
+                  title: 'Please review output', 'icon': 'error'});
+                return;
+              }
+              $.ajax({
+                url:  '/admin/setting/edit/'+id_setting,
+                type: 'post',
+                data: {
+                  id: id_setting,
+                  content: $("#out").text(),
+                  ajax: true
+                },
+                success: function(res) {
+                  Swal.fire(
+                    '',
+                    !res.code ? 'Menu cms has been deleted.' : res.msg,
+                    !res.code ? 'success' : 'error'
+                  )
+                },
+                complete: function(res) {
+
+                }
+              });
+            }
+          })
+        })
+      });
+
+

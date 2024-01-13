@@ -1,0 +1,34 @@
+extends ../../layouts/base
+
+block title
+  h1 Edit setting
+
+block content
+  <div class="row">
+    <div class="col-md-12">
+      <div class="box">
+        <div class="box-body">
+          - var id = data.id
+          if id 
+            case data.type
+              when 'menu_cms'
+                include ./_menu_config
+              when 'menu_website'
+                include ./_menu_config
+              when 'seo_web'
+                include ./_seo_website
+              when 'tool_and_social'
+                include ./_tool_and_social
+              default
+                include ./_form
+          else 
+            include ./_form
+          +form(data ? data : {})
+        </div>
+      </div>
+    </div>
+  </div>
+  script(type='text/javascript').
+    $(function () {
+      initUploadAws('icon', {open: false, src: '#{data.icon}'});
+    });

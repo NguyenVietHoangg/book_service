@@ -1,0 +1,17 @@
+extends ../../layouts/base
+block title
+  h1 Danh sách vùng quảng cáo
+block content
+  .box
+    .box-body     
+      .row
+        .col-lg-12.col-md-12                        
+          table#table_category(data-buttons-toolbar='.buttons-toolbar' data-toolbar-align='unset' data-search='false' data-icons-prefix='fa' data-show-refresh='false' data-show-toggle='false' data-show-columns='true' data-show-export='true' data-detail-view='false' data-detail-formatter='detailFormatter' data-minimum-count-columns='2' data-show-pagination-switch='false' data-pagination='true' data-id-field='id' data-page-list='[5,All]' data-show-footer='false' data-side-pagination='server' data-url='/admin/allads/ajax-list'   data-query-params='queryParams' data-response-handler='responseHandler')
+    include ./_model_ads_position.pug
+  script.
+    var fields = [
+      {"field":"area","title":"Vùng","formatter" : "showArea"},
+      {"field":"position","title":"Vị trí cài đặt","formatter" : "displayName"}]      
+    var urlManager = '/admin/allads';
+    var setLimitRow = 30;
+  include ./_tablejs

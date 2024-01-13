@@ -1,0 +1,254 @@
+#menu ul > li {
+  /* width: 100px; */
+  text-align: center;
+  /* background-color: aquamarine !important; */
+  display: inline-table;
+}
+#menu  li a {
+  /* color: white !important; */
+}
+
+
+#menu ul.menu li a:hover, #menu ul.menu li.active a {
+  height: 40px;
+  background: #fff !important;
+}
+
+#menu ul.menu li a {
+  font-size: 15px;
+  color: #fff;
+  font-family: sans-serif;
+}
+
+#menu li a:hover {
+  color: #308757 !important;
+}
+
+#menu ul.submenu li:hover, #menu ul.submenu li:hover a {
+  border-radius: 0;
+  width: 100%;
+  text-align: left !important;
+}
+
+#menu li a.label {
+  border-radius: unset;
+  width: 100%;
+}
+
+#menu .submenu {
+  position: absolute;
+  z-index: 9999;
+  background-color: #308757 !important;
+  width: auto;
+}
+
+#menu li {
+  position: relative;
+}
+
+#menu li .submenu li{
+  position: relative;
+  z-index: 9999;
+}
+#menu li .submenu li a{
+  margin-left: 0px;
+}
+
+#menu ul li ul.submenu {
+  display: none;
+}
+
+#menu ul li:hover ul.submenu {
+  display: block;
+}
+.mn-home{
+  width: 10px !important;
+}
+#menu ul.menu li{
+  margin-right: 17px !important;
+}
+.box-top-search ul li {
+  float: left;
+  font-size: 11px;
+  width: 89px;
+  height: 45px;
+  border-left: unset !important;
+  border: 2px solid;
+  line-height: 30px;
+  padding: 12px 1px;
+  margin: 4px;
+  border-radius: 4px;
+  background: #008757;
+  color: white;
+}
+#home .owl-item .img-responsive {
+  width: 198px;
+  height: 112px;
+}
+
+.box-top-search ul li a{
+  color: white !important;
+}
+@media (max-width: 699px) {
+  .search-wrap a {
+    width: 30%;
+    font-size: 13px;
+    text-align: center;
+  }
+  .search-wrap input {
+    width: 65%;
+  }
+  .box-top-search ul li {
+    border-left: unset !important;
+  }
+  .item-small .img-responsive {
+    width: 198px;
+    height: 112px;
+    max-height: 112px;
+  }
+  .view10 div.big {
+    padding: 5px 0 !important;
+  }
+  .view10 div.big h3 a {
+    line-height: 21px;
+  }
+  .footer-right {
+    display: none;
+  }
+  .footer-left {
+    width: 88% !important;
+  }
+}
+
+@media (min-width: 699px) {
+  ul#top-menu-box{
+    display: none;
+  }
+  .search-wrap {
+    padding-bottom: 34px;
+  }
+}
+
+.list-cate-children {
+  margin-right: 10px;
+  float: right;
+  
+}
+
+.row-title {
+  width: 30%;
+}
+
+.cate-child a {
+  margin: 0 5px;
+  font-weight: bold;
+  color: #008757;
+}
+
+.cate-child.border {
+  border: 1.5px solid #008757;
+  border-radius: 3px;
+  margin: 3px 3px;
+  padding: 2px;
+  display: inline-block;
+}
+
+.menu_bread li.start a{
+  margin-left: 10px;
+  color: black
+}
+
+.cate-child.border.actived {
+  background-color: #008757;
+}
+.cate-child.border.actived a{
+  color: #fff;
+}
+
+.small-item-list {
+  display: flex;
+  flex-direction: center;
+  align-items: center;  
+}
+
+.item-small {
+  width: 50%;
+  margin: 2px;
+  padding: 2px;
+  box-shadow: 0 1px 1px rgb(246, 246, 246);
+  background-color: rgb(246, 246, 246) !important;
+}
+
+.item-small h3{
+  height: 79px;
+  line-height: 18px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: initial;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  font-weight: bold;
+}
+
+.fix-cate .item-small h3{
+  height: 72px;
+}
+.hiden-block {
+  display: none
+}
+.img-top-cate {
+  height: 160px;
+}
+.articleDetail{
+  text-align: justify;
+}
+.main-menu.fixed, .top-header.mobile-fixed  {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 9999;
+}
+.siderbarli h3{
+  height: 60px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: initial;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  font-weight: bold;
+}
+.img-responsive, .thumbnail>img, .thumbnail a>img, .carousel-inner>.item>img, .carousel-inner>.item>a>img {
+  display: inline-block !important;
+}
+
+.footer-left {
+  width: 60%;
+  float: left;
+  margin-left: 15px;
+  margin-top: 10px;
+  text-align: justify;
+}
+.footer-right {
+  width: 26%;
+  margin-top: 10px;
+  float: right;
+  text-align: justify;
+}
+
+.menu li.active .icon-home .fa-home{
+  color: #098757 !important;
+}
+
+.menu li.actived {
+  background-color:white;
+}
+
+.menu li.actived a.parent-menu{
+  color: #098757 !important;
+}
+
+#block_relative .view1 li img {
+  margin-right: 7px !important;
+}

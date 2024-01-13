@@ -1,0 +1,69 @@
+extends ../../layouts/base
+block title
+  h1 Tag 
+block content
+  .box
+    .box-body
+      .row
+        .col-lg-12.col-md-12
+          .buttons-toolbar
+          #toolbar
+            //- a.btn.btn-success.button-manager(href='/admin/tag/add')
+            //-   i.fa.fa-plus
+            //-   |  Create 
+            button#remove_tag.btn.btn-danger.button-manager(disabled='')
+              i.fa.fa-trash
+              |  Delete 
+            a(href='').btn.btn-default.button-manager
+              i.fa.fa-refresh
+              |  Refresh 
+          .row#box_filter_tag(style="margin-top: 7px")
+            .col-lg-4.col-md-4
+              label Key search
+              .form-group
+                input#search.form-control(type='text' placeholder='title...' name='keySearch' autocomplete="off")
+            .col-lg-2.col-md-2
+              .form-group
+                label With status
+                select#order.select2.form-control.status-selection(name='status')
+                  option(value='') ALL
+                  option(value='on') On
+                  option(value='off') Off
+            .col-lg-2.col-md-2  
+              .form-group
+                label Start Date
+                .input-group.date
+                  .input-group-addon
+                    i.fa.fa-calendar
+                  input#start_date.datepicker.form-control.pull-right(type='text' name="start_date" autocomplete="off")
+            .col-lg-2.col-md-2  
+              .form-group
+                label End Date
+                .input-group.date
+                  .input-group-addon
+                    i.fa.fa-calendar
+                  input#end_date.datepicker.form-control.pull-right(type='text' name="end_date" autocomplete="off")
+            .col-lg-2.col-md-2
+              .form-group
+                button(style='margin-top: 25px;')#filter_tag.btn.btn-primary(type='submit')
+                  i.fa.fa-filter
+                  |  Filter
+          table#table_tag(data-buttons-toolbar='.buttons-toolbar' data-toolbar-align='unset' data-search='false' data-icons-prefix='fa' data-show-refresh='false' data-show-toggle='false' data-show-columns='true' data-show-export='true' data-detail-view='false' data-detail-formatter='detailFormatter' data-minimum-count-columns='2' data-show-pagination-switch='false' data-pagination='true' data-id-field='id' data-page-list='[30]' data-show-footer='false' data-side-pagination='server' data-url='/admin/tag/ajax-list' data-query-params='queryParams' data-response-handler='responseHandler')
+  script.
+    //- var fields = [{field: 'name'}, {field: 'avatar', formatter: 'imageFormatter'}, {field: 'status'}];
+    var fields = [
+      {"field":"id","title":"id"},
+      {"field":"name","title":"Tên tag","formatter" : "displayName"},
+      {"field":"slug","title":"slug"},
+      {"field":"view","title":"Lượt xem"},
+      {"field":"createdAt","title":"Ngày thêm"},
+      //- {"field":"link","title":"link"},
+      //- {"field":"position","title":"position"},
+      //- {"field":"adsScript","title":"adsScript"},
+      //- {"field":"flag","title":"flag"},
+      //- {"field":"view","title":"view"},
+      {"field":"status","title":"Trạng thái", "formatter": "showStatus"}
+    ]
+    var urlManager = '/admin/tag';
+    var setLimitRow = 30;
+  include ./_tablejs

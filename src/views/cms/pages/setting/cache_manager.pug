@@ -1,0 +1,98 @@
+extends ../../layouts/base
+block title
+  h1 Quản lý danh sách bộ đệm
+block content
+  .box
+    .box-body
+      .row
+        .col-lg-12.col-md-12
+          .buttons-toolbar
+          #toolbar
+              a.btn.btn-danger.button-manager(style='margin-bottom: 10px; margin-left: 10px;' data='reset-all' title='Xóa toàn bộ caching hệ thống')
+                i.fa.fa-trash
+                |  Reset toàn bộ cache Website
+              a.btn.btn-danger.button-manager(style='margin-bottom: 10px; margin-left: 10px;' data='reset-home' title='Làm mới toàn bộ trang chủ')
+                i.fa.fa-trash
+                |  Reset cache Trang Chủ
+              a.btn.btn-danger.button-manager(style='margin-bottom: 10px; margin-left: 10px;' data='reset-category' title='Làm mới toàn bộ hoặc một category')
+                i.fa.fa-trash
+                |  Reset cache Trang Danh Mục
+              a.btn.btn-danger.button-manager(style='margin-bottom: 10px; margin-left: 10px;' data='reset-article' title='Làm mới toàn bộ hoặc một bài viết')
+                i.fa.fa-trash
+                |  Reset cache Trang Chi Tiết
+              a.btn.btn-danger.button-manager(style='margin-bottom: 10px; margin-left: 10px;' data='reset-search' title='Làm mới toàn bộ trang tìm kiếm')
+                i.fa.fa-trash
+                |  Reset cache Trang Tìm Kiếm
+              a.btn.btn-danger.button-manager(style='margin-bottom: 10px; margin-left: 10px;' data='reset-tag' title='Xóa toàn bộ caching hệ thống')
+                i.fa.fa-trash
+                |  Reset toàn Trang Tags
+              a.btn.btn-danger.button-manager(style='margin-bottom: 10px; margin-left: 10px;' data='reset-login' title='Xóa toàn bộ caching hệ thống')
+                i.fa.fa-trash
+                |  Reset toàn bộ quyền đăng nhập CMS
+  include ./_modal_select.pug
+  script.
+    $('.button-manager').click(function() {
+      const valueReset = $(this).attr('data')
+      if (['reset-all', 'reset-home', 'reset-search', 'reset-tag', 'reset-login'].includes(valueReset)) {
+        Swal.fire({
+          title: 'Bạn có chắc chắn "'+ $(this).text()+'"?',
+          text: "Dữ liệu lưu trữ tạm thời sẽ được làm mới!",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#969696',
+          confirmButtonText: 'ĐỒNG Ý',
+          cancelButtonText: 'HỦY BỎ',
+        }).then((result) => {
+          if (result.value) {
+            resetcache(valueReset)
+          }
+        })
+        $('#typereset').val('')
+      } else {
+        $('#myModal').modal('show')
+        if (valueReset === 'reset-category') {
+          $('.modal-title').text('Điền ID của category (nếu để trống sẽ reset toàn bộ đệm tất cả Category)')
+        } else if (valueReset === 'reset-article') {
+          $('.modal-title').text('Điền ID của bài viết (nếu để trống sẽ reset toàn bộ đệm tất cả Bài viết)')
+        }
+        $('#typereset').val(valueReset)
+      }
+    })
+    $('.btnapply').click(function() {
+      var type = $('#typereset').val()
+      var idRemove = $('#idRemove').val()
+      Swal.fire({
+          title: 'Bạn có chắc chắn xóa bộ đệm?',
+          text: "Dữ liệu lưu trữ tạm thời sẽ được làm mới!",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#969696',
+          confirmButtonText: 'ĐỒNG Ý',
+          cancelButtonText: 'HỦY BỎ',
+      }).then((result) => {
+        if (result.value) {
+          resetcache(type, idRemove)
+          $('#myModal').modal('hide')
+          $('#idRemove').val('')
+          $('#typereset').val('')
+        }
+      })
+    })
+
+    function resetcache(type, idRemove='') {
+      $.ajax(
+      {
+        url: "/admin/setting/clear-cache",    
+        method: "post",
+        data:
+        {              
+          type: type,
+          idRemove: idRemove
+        },
+        success: function (res) {
+          $.notify("Success", { position:"bottom right", className: "success" });
+        }
+      });
+    }

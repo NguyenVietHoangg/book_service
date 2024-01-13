@@ -1,0 +1,113 @@
+#myModal.modal
+  .modal-dialog
+    .modal-content
+      .modal-header
+        span.modal-title(style="font-size:18px") Chọn vị trí hiển thị trên &nbsp;
+        span.namecollection(style="font-size:18px; color:red") 
+        br
+        span.tborcollection(style="font-size:15px; color:blue; font-style:italic ")       
+      .modal-body   
+        //  lưu id collection mà bài viết đang chọn    
+        input(id='toan113' type='hidden' )   
+        input(id='toan114' type='hidden' )   
+        input(id='pisitionT' type='hidden' )
+        input(id='storyid' type='hidden')
+        input(id='publishdate' type='hidden' )
+        input(id='publishtime' type='hidden' )
+
+        .toan5(style = "text-align:center")          
+          button.btn.btn-success.btnposition.changecolorr(name='position' value ='1' type='button' style="margin-left:15px; font-size:32px;background-color:green; width:64px; height:64px;" ) 1
+          button.btn.btn-success.btnposition.changecolorr(name='position' value ='2' type='button' style="margin-left:15px; font-size:32px;background-color:green; width:64px; height:64px;") 2
+          button.btn.btn-success.btnposition.changecolorr(name='position' value ='3' type='button' style="margin-left:15px; font-size:32px;background-color:green; width:64px; height:64px;" ) 3  
+          button.btn.btn-success.btnposition.changecolorr(name='position' value ='4' type='button' style="margin-left:15px; font-size:32px;background-color:green; width:64px; height:64px;" ) 4
+          button.btn.btn-success.btnposition.changecolorr(name='position' value ='5' type='button' style="margin-left:15px; font-size:32px;background-color:green; width:64px; height:64px;") 5
+        .list-story-collection-position(style='margin-top: 15px;')
+      .modal-footer
+        button.btn.btnapply( data-dismiss='modal' style="background-color:#636363; width: 129px; height: 54px; line-height: 35px; font-size: 32px; color: white;") Apply
+        button.btn.btncancel( data-dismiss='modal' style="background-color:#0f92d0; width: 129px; height: 54px; line-height: 35px;font-size: 32px; color: white;") Cancel
+script(type='text/javascript').
+    $('.btnposition').on('click', function(){ 
+      $('.tborcollection').text('')     
+      let x = document.querySelectorAll(".changecolorr")      
+      for (i = 0; i < x.length; i++) {
+        x[i].style.backgroundColor = "green"              
+      }
+      this.style.backgroundColor = "red"
+      $('#pisitionT').val(this.value) 
+      let idCollection = $('#toan113').val()
+      let position = $('#pisitionT').val() // position 
+      let idCollectionNew = idCollection.split('|')[0] // id của collection mà bài viết đang chọn 
+      let idstory = $('#storyid').val() // idstory
+      let publishdate = $('#publishdate').val() // idstory
+      let publishtime = $('#publishtime').val() // idstory
+      
+      $.ajax(
+          {
+            url: "/Story/positioncheck",    
+            method: "post",
+            data:
+            {
+              positionCollection: position,
+              idCollection: idCollectionNew,
+              storyid: idstory,
+              datepublish: publishdate,
+              timepublish: publishtime
+            },
+            success: function (res) {              
+              if(res.nameStory && res.publishedAt) {
+                $('.tborcollection').append('Bài viết:'+' ' + res.nameStory + ',' + ' thời gian published:' + ' ' + res.publishedAt + ' ' + 'đang tồn tại')         
+              }                        
+                                    
+            }
+          });
+    });
+    
+    $('.btnapply').on('click', function(){     
+      let x = document.querySelectorAll(".changecolorr")      
+      for (i = 0; i < x.length; i++) {
+        x[i].style.backgroundColor = "green"              
+      }
+      let idCollection = $('#toan113').val()  
+      let idCollectionNew = idCollection.split('|')[0] // id của collection mà bài viết đang chọn  
+
+      let position = $('#pisitionT').val()         // vị trí của nó 
+      let colsid =$('#toan114').val()   // id collection để tìm id của input đã tích chọn       
+      $('#checkbox'+ colsid).val(idCollectionNew +'|'+position)      
+      let string = '(' + position + ')'
+      if(position){
+        $('#span'+ colsid).text(string)
+      } 
+      
+            
+    });
+
+    $('.btncancel').on('click', function(){     
+      let idstory = $('#storyid').val() // idstory
+      let idCollection = $('#toan113').val()      
+      let idCollectionNew = idCollection.split('|')[0] // id của collection mà bài viết đang chọn 
+      console.log(idstory,idCollectionNew)
+      let x = document.querySelectorAll(".changecolorr")      
+      for (i = 0; i < x.length; i++) {
+        x[i].style.backgroundColor = "green"          
+      }  
+      $.ajax(
+          {
+            url: "/Story/checkpositioncollection",    
+            method: "post",
+            data:
+            {              
+              idCole: idCollectionNew,
+              storyid: idstory              
+            },
+            success: function (res) {
+              console.log(res,idCollectionNew)
+              if(res == "Không có collectionStory"){                
+                $('#checkbox' + idCollectionNew).prop("checked", false); 
+                $('#checkbox' + idCollectionNew).closest('div').removeClass("checked");  // tìm div gần nhất
+                $('#checkbox' + idCollectionNew).closest('div').attr("aria-checked", false);                              
+              }              
+            }
+          });
+    });
+
+    

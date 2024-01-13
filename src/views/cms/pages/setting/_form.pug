@@ -1,0 +1,32 @@
+mixin form(data={})
+  form#form_data(method='POST', action=(`/admin/setting/${data.id ? 'edit/'+data.id : 'add'}`), role='form')
+    if (data.id)
+      input#id(type='hidden' name='id', value=data.id)
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label Loại cài đặt:
+        input.form-control(name='type' type='text' value=(data.type ? data.type : '') placeholder='type' readonly=(data.id ? true : false))
+
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label Tên cài đặt:
+        input.form-control(name='name' type='text' value=(data.name ? data.name : '') placeholder='name')
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label description:
+        textarea.summernotex(name='content') #{data.content}
+    if (data.id)
+      .col-lg-12.col-md-12
+        .form-group
+          label.control-label Trạng thái:
+          input.minimal(type='checkbox' checked=(data.status && data.status === 'on') name='status')
+
+    .col-lg-12.col-md-12
+      .form-group
+        button.btn.btn-success
+          i.fa.fa-check
+          |  Submit
+    include ../../layouts/modal-upload
+  include _validation

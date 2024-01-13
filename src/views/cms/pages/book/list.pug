@@ -1,0 +1,56 @@
+extends ../../layouts/base
+block title
+  h1 book
+block content
+  .box
+    .box-body
+      .row
+        .col-lg-12.col-md-12
+          .buttons-toolbar
+          #toolbar
+            a.btn.btn-success.button-manager(href='/admin/book/add')
+              i.fa.fa-plus
+              |  Create
+            button#remove_book.btn.btn-danger.button-manager(disabled='')
+              i.fa.fa-trash
+              |  Delete
+            a(href='').btn.btn-default.button-manager
+              i.fa.fa-refresh
+              |  Refresh
+          .row#box_filter_book(style="margin-top: 7px")
+            .col-lg-4.col-md-4
+              label Key search
+              .form-group
+                input#search.form-control(type='text' placeholder='title...' name='search' autocomplete="off")
+            .col-lg-2.col-md-2
+              .form-group
+                label With
+                select#order.select2.form-control.status-selection(name='order')
+                  option(value='') ALL
+                  option(value='0') Status
+            .col-lg-2.col-md-2
+              .form-group
+                label Start Date
+                .input-group.date
+                  .input-group-addon
+                    i.fa.fa-calendar
+                  input#start_date.datepicker.form-control.pull-right(type='text' name="start_date" autocomplete="off")
+            .col-lg-2.col-md-2
+              .form-group
+                label End Date
+                .input-group.date
+                  .input-group-addon
+                    i.fa.fa-calendar
+                  input#end_date.datepicker.form-control.pull-right(type='text' name="end_date" autocomplete="off")
+            .col-lg-2.col-md-2
+              .form-group
+                button(style='margin-top: 25px;')#filter_book.btn.btn-primary(type='submit')
+                  i.fa.fa-filter
+                  |  Filter
+          table#table_book(data-buttons-toolbar='.buttons-toolbar' data-toolbar-align='unset' data-search='false' data-icons-prefix='fa' data-show-refresh='false' data-show-toggle='false' data-show-columns='true' data-show-export='true' data-detail-view='false' data-detail-formatter='detailFormatter' data-minimum-count-columns='2' data-show-pagination-switch='false' data-pagination='true' data-id-field='id' data-page-list='[30]' data-show-footer='false' data-side-pagination='server' data-url='/admin/book/ajax-list' data-query-params='queryParams' data-response-handler='responseHandler')
+  script.
+    //- var fields = [{field: 'name'}, {field: 'avatar', formatter: 'imageFormatter'}, {field: 'status'}];
+    var fields = [{"field":"categoryId","title":"categoryId"},{"field":"name","title":"name"},{"field":"slug","title":"slug"},{"field":"author","title":"author"},{"field":"resource","title":"resource"},{"field":"origin","title":"origin"},{"field":"categoryListString","title":"name"},{"field":"position","title":"position"},{"field":"totalPage","title":"totalPage"},{"field":"link","title":"link"},{"field":"adsScript","title":"adsScript"},{"field":"state","title":"state"},{"field":"flag","title":"flag"},{"field":"icon","title":"icon","formatter":"imageFormatter"},{"field":"images","title":"images","formatter":"imageFormatter"},{"field":"genre","title":"genre"},{"field":"shortDescription","title":"shortDescription"},{"field":"description","title":"description"},{"field":"adsScript","title":"adsScript"},{"field":"view","title":"view"},{"field":"rate","title":"rate"},{"field":"status","title":"status"}]
+    var urlManager = '/admin/book';
+    var setLimitRow = 30;
+  include ./_tablejs

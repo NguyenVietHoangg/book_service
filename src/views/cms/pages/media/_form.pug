@@ -1,0 +1,49 @@
+mixin form(data={})
+  form#form_data(method='POST', action=(`/admin/media/${data.id ? 'edit/'+data.id : 'add'}`), role='form')
+    if (data.id)
+      input#id(type='hidden' name='id', value=data.id)
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label Tên ảnh:
+        input.form-control(name='name' type='text' value=(data.name ? data.name : '') placeholder='name')
+
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label Alt ảnh:
+        input.form-control(name='alt' type='text' value=(data.alt ? data.alt : '') placeholder='alt')
+
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label Ảnh:
+        .row#wrap-upload-path
+        a.btn.btn-default#render-path(href='javascript:;' onclick="initUploadAws('path')") Choose image &nbsp;
+          i.fa.fa-image
+
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label Đường dẫn gốc:
+        input.form-control(name='fullpath' type='text' value=(data.fullpath ? data.fullpath : '') placeholder='fullpath')
+
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label Loại:
+        input.minimal(type='radio' name='type' checked='')
+
+
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label undefined:
+        input.minimal(type='checkbox' checked=(!data.inside || data.inside === '1') name='inside')
+
+
+    .col-lg-12.col-md-12
+      .form-group
+        button.btn.btn-success
+          i.fa.fa-check
+          |  Submit
+    include ../../layouts/modal-upload
+  include _validation

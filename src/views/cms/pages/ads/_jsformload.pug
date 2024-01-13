@@ -1,0 +1,462 @@
+block content
+  script(type='text/javascript').
+    $(function () {
+      //-   CKEDITOR.replace( 'editor1', {
+      //-     extraPlugins: 'codesnippet',
+      //-     codeSnippet_theme: 'monokai_sublime',
+      //-     height: 600, 
+      //-     allowedContent: true,
+      //-     contentsCss: '.helloworld { background-color:#C0C0C0;}.helloworld2 { background-color:#5555C0;}',
+      //-     docType: '<!DOCTYPE HTML>',
+      //-     toolbar: [
+      //-         { name: 'document', groups: [ 'mode', 'document', 'doctools' ], items: [ 'Source', '-', 'Save', 'NewPage', 'Preview', 'Print', '-', 'Templates' ] },
+      //-     { name: 'clipboard', groups: [ 'clipboard', 'undo' ], items: [ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ] },
+      //-     { name: 'editing', groups: [ 'find', 'selection', 'spellchecker' ], items: [ 'Find', 'Replace', '-', 'SelectAll', '-', 'Scayt' ] },
+      //-     { name: 'forms', items: [ 'Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton', 'HiddenField' ] },
+      //-     '/',
+      //-     { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ], items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat' ] },
+      //-     { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ], items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', ] },
+      //-     { name: 'links', items: [ 'Link', 'Unlink', 'Anchor' ] },
+      //-     { name: 'insert', items: [ 'Image', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak', 'Iframe' ] },
+      //-     '/',
+      //-     { name: 'styles', items: [ 'Styles'  ] },
+      //-     { name: 'tools', items: [ 'Maximize', 'ShowBlocks' ] },
+      //-     { name: 'others', items: [ '-' ] },
+      //-     { name: 'about', items: [ 'About' ] }
+      //-         ],
+      //-     stylesSet: [
+      //-         { name: 'Paragraph', element: 'p', attributes: { 'class': 'helloworld' } },
+      //-         { name: 'Paragraph2', element: 'p', attributes: { 'class': 'helloworld2' } },
+            
+      //-     ]
+      //-   } );
+      //- //bootstrap WYSIHTML5 - text editor
+      //- $('.textarea').wysihtml5()
+      // khởi tạo hoặc default biến, giá trị input bằng js
+      var s1 = $("#hashtags").select2({
+        minimumInputLength: 2,
+        tags: true,
+        data: hashtags
+      });
+      s1.val(hashtags).trigger("change")
+      $('#form-story .datepicker-story').datepicker({
+        autoclose: true,
+        format: "dd/mm/yyyy"
+      })
+      var currentDate = moment().format('DD/MM/YYYY')
+      //- $(".datepicker").datepicker( "setDate" , moment().format('DD/MM/YYYY'));
+      $('#form-story .reservation').daterangepicker()
+      $('#form-story .reservationtime').daterangepicker({ timePicker: true, timePickerIncrement: 30, locale: { format: 'DD/MM/YYYY hh:mm A' }})
+      $('#form-story .daterange-btn').daterangepicker(
+        {
+          ranges   : {
+            'Today'       : [moment(), moment()],
+            'Yesterday'   : [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Last 7 Days' : [moment().subtract(6, 'days'), moment()],
+            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+            'This Month'  : [moment().startOf('month'), moment().endOf('month')],
+            'Last Month'  : [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+          },
+          startDate: moment().subtract(29, 'days'),
+          endDate  : moment()
+        },
+        function (start, end) {
+          $('#daterange-btn span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
+        }
+      )
+      $('#form-story .timepicker-story').timepicker({
+        showInputs: false,
+      });
+
+      // Khởi tạo textarea
+      $('#form-story .summernote').summernote({
+        height: 550,   //set editable area's height
+        codemirror: { // codemirror options
+          theme: 'monokai',
+          lineWrapping: true
+        },
+        callbacks: { onImageUpload: function(files, editor, welEditable) {
+          //- console.log('files', files);
+          sendFile(files[0], editor, welEditable);
+          }
+        }
+      });
+
+      //- $('#story_relative_search').select2({
+      //-   templateResult: formatState,
+      //-   templateSelection: formatState,
+      //-   tags: true,
+      //-   minimumInputLength: 3,
+      //-   tokenSeparators: [','],
+      //-   //- createSearchChoice: function(term, data) {
+      //-   //-   console.log(term)
+      //-   //-   if ($(data).filter(function() {
+      //-   //-     return this.text.localeCompare(term) === 0;
+      //-   //-   }).length === 0) {
+      //-   //-     return {
+      //-   //-       id: term,
+      //-   //-       text: term
+      //-   //-     };
+      //-   //-   }
+      //-   //- },
+      //-   multiple: true,
+      //-   ajax: {
+      //-     url: '/admin/story/ajax-list?order=desc&keySearc='+$('#story_relative_search').val(),
+      //-     dataType: "json",
+      //-     data: function(term, page) {
+      //-       return {
+      //-         q: term
+      //-       };
+      //-     },
+      //-     results: function(data, page) {
+      //-       console.log(data)
+      //-       return {
+      //-         results: data
+      //-       };
+      //-     }
+      //-   },
+        
+      //- });
+      var s2 = $('#story_relative_search').select2({
+        placeholder: "These tags will apply to all lines",
+        minimumInputLength: 1,
+        tokenSeparators: [','],
+        data: suggestList,
+        ajax: {
+          url: '/admin/story/ajax-list-relative?order=desc&keySearch='+$('#story_relative_search').val(),
+          dataType: 'json',
+          delay: 250,
+          data: function (params) {
+            return {
+              q: params.term, // search term
+              page: params.page
+            };
+          },
+          processResults: function (data, params) {
+            //- alert(1)
+            var datamod = data.rows.map(item => {id: item.id})
+            //- console.log('datamod', data.rows)
+            // parse the results into the format expected by Select2
+            // since we are using custom formatting functions we do not need to
+            // alter the remote JSON data, except to indicate that infinite
+            // scrolling can be used
+            params.page = params.page || 1;
+
+            //- var datamod = data.rows.map(item => {id: item.id})
+            //- console.log('datamod', mod)
+
+            return {
+              results: data.rows,
+              pagination: {
+                more: (params.page * 30) < data.total_count
+              }
+            };
+          },
+          //- cache: true
+        },
+        //- tags: true,
+        templateResult: formatRepo,
+        templateSelection: formatRepoSelection
+      });
+      
+      var vals = suggestList.map(item => item.id);
+      s2.val(vals).trigger("change")
+    });
+
+    var btnImage = '<div class="note-btn-group btn-group note-insert"><a class="btn btn-default" id="render-avatar" href="javascript:;" onclick="initUploadAws('+"'add-to-editor-2'"+')">Choose image &nbsp;<i class="fa fa-image"></i><input class="form-control" id="avatar2" name="avatar2" value="" type="hidden"></a></div>';
+    $(function () {
+      $('.note-toolbar').append(btnImage);
+    });
+
+    function sendFile(file, editor, welEditable) {
+      data = new FormData();
+      data.append("file", file);
+      $.ajax({
+        data: data,
+        type: "POST",
+        url: "/admin/media/add?type=form",
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function(res) {
+          // editor.insertImage(welEditable, url);
+          $('#form-story .summernote').summernote('editor.insertImage', res.link);
+        }
+      });
+    }
+
+    function formatRepo (repo) {
+      if (repo.loading) {
+        return repo.name;
+      }
+
+      var $container = $(
+        "<div class='select2-result-repository clearfix'>" +
+          "<div class='select2-result-repository__avatar'><img width='64px' height='46px' src='" + DOMAIN_IMG + '/' + repo.imageSave + "' /></div>" +
+          "<div class='select2-result-repository__meta'>" +
+            "<div class='select2-result-repository__title'></div>" +
+          "</div>" +
+        "</div>"
+      );
+      $container.find(".select2-result-repository__title").text(repo.name);
+      return $container;
+    }
+
+    function formatRepoSelection (repo) {
+      return repo.name || repo.slug;
+    }
+    // nếu check vào vị trí thì sẽ tự check vào vùng của nó 
+    $('.ifChangeChild').on('ifChanged', function(){      
+      // nếu checkbox đc tích
+      if(this.checked) {        
+        let idParent = this.value.split('|')[0]        
+        $('#' + idParent).closest('div').addClass("checked");  // tìm div gần nhất
+        $('#' + idParent).closest('div').attr("aria-checked", true); 
+        $('#' + idParent).attr("checked", true)
+      }
+      // nếu bỏ checkbox      
+    });
+
+    // nếu check vào vị trí thì sẽ tự check vào vùng của nó 
+    $('.ifChangeTime').on('ifChanged', function(){      
+      // nếu checkbox đc tích
+      if(this.checked) { 
+        let adsPositionId = this.value     
+        let idParent = this.value.split('|')[0]  // Home       
+        let idChild = this.value.split('|').join('')   // Homeduoi-tieu-diem    
+        let idclick = this.id  // checkTimeHomedinh-dau  or checkAllTimeHomedinh-dau
+        let adsId = $('#getidAds').val()  // id của quảng cáo
+        
+              
+        // Khi check vào chọn time thì check cho parent
+        $('#' + idParent).closest('div').addClass("checked");  // tìm div gần nhất
+        $('#' + idParent).closest('div').attr("aria-checked", true); 
+        $('#' + idParent).attr("checked", true)
+        //  Khi check vào chọn time thì check cho child
+        $('#' + idChild).closest('div').addClass("checked");  // tìm div gần nhất
+        $('#' + idChild).closest('div').attr("aria-checked", true); 
+        $('#' + idChild).attr("checked", true)
+        
+        // chỉ đc chọn alltime hoặc time 
+        // nếu check chọn all time
+        if(idclick.includes("checkAllTime")){
+          document.getElementById('inputTime'+idChild).value = ''
+          document.getElementById('inputTimeTo'+idChild).value = ''
+          $('#checkTime'+idChild).prop("checked",false)
+          $('#checkTime'+idChild).closest('div').removeClass("checked");  // tìm div gần nhất
+          $('#checkTime'+idChild).closest('div').attr("aria-checked", false);          
+          $.ajax(
+          {
+            url: "/ads/checkPositionAllTime",    
+            method: "post",
+            data:
+            {              
+              adsId: adsId,
+              stringCheck: adsPositionId              
+            },
+            success: function (res) {              
+              if(res != "Hợp lệ"){
+                Swal.fire({
+                icon: 'error',            
+                text: "Đã có quảng cáo:"+' '+ res.nameAds+'(id='+ res.adsId+')'+ ' '+ "đặt toàn bộ thời gian! Bạn vui lòng chọn lại!"    
+              })     
+                
+                $('#checkAllTime'+idChild).prop("checked",false)
+                $('#checkAllTime'+idChild).closest('div').removeClass("checked");  // tìm div gần nhất
+                $('#checkAllTime'+idChild).closest('div').attr("aria-checked", false);
+
+
+                $('#checkTime'+idChild).prop("checked",false)
+                $('#checkTime'+idChild).closest('div').removeClass("checked");  // tìm div gần nhất
+                $('#checkTime'+idChild).closest('div').attr("aria-checked", false);
+
+
+                       
+                $('#' + idChild).closest('div').removeClass("checked");  // tìm div gần nhất
+                $('#' + idChild).closest('div').attr("aria-checked", false); 
+                $('#' + idChild).attr("checked", false)
+
+              
+              } 
+            }
+          });               
+        }
+        // nếu check chọn thời gian
+        if(idclick.includes("checkTime")){
+          $('#checkAllTime'+idChild).prop("checked",false)
+          $('#checkAllTime'+idChild).closest('div').removeClass("checked");  // tìm div gần nhất
+          $('#checkAllTime'+idChild).closest('div').attr("aria-checked", false);         
+          let timeSellect = $('#inputTime' + idChild).val()  
+
+          let time = $('#save'+idChild).val()   
+          let timeTo = $('#saveTo'+idChild).val()  
+          $('#inputTime'+idChild).val(time)  
+          $('#inputTimeTo'+idChild).val(timeTo)                
+        }
+      }
+      //end checkbox dc tích     
+    });
+
+    function handler(e,f){      
+      let adsId = $('#getidAds').val()  // id của quảng cáo
+      let adsPositionId = e + '|' + f 
+      let timeSellect = $('#inputTime' + e+f).val()
+      let timeSellectTo = $('#inputTimeTo' + e+f).val()      
+      let saveTime = $('#save' + e+f).val()                
+      if(timeSellectTo){
+        $.ajax(
+          {
+            url: "/ads/checkPositionTime",    
+            method: "post",
+            data:
+            {              
+              adsId: adsId,
+              stringCheck: adsPositionId,
+              time: timeSellect,
+              timeTo: timeSellectTo               
+            },
+            success: function (res) {              
+              if(res != "Hợp lệ" && res.timePublish){
+                Swal.fire({
+                icon: 'error',            
+                text: "Đã có quảng cáo:"+' '+ res.nameAds+'(id='+ res.adsId+')'+ ' '+ "thời gian đặt:"+' '+res.timePublish+' '+"! Bạn vui lòng chọn lại!"     
+              })               
+                $('#inputTime' + e+f).val('') 
+                $('#inputTimeTo' + e+f).val('')               
+              }
+              else if(res != "Hợp lệ" && !res.timePublish){
+                document.getElementById('inputTime'+e+f).value = ''
+                document.getElementById('inputTimeTo'+e+f).value = ''
+                Swal.fire({
+                icon: 'error',            
+                text: "Đã có quảng cáo:"+' '+ res.nameAds+'(id='+ res.adsId+')'+ ' '+ "đặt toàn bộ thời gian! Bạn vui lòng chọn lại!"     
+              })               
+               
+
+                $('#checkAllTime'+e+f).prop("checked",false)
+                $('#checkAllTime'+e+f).closest('div').removeClass("checked");  // tìm div gần nhất
+                $('#checkAllTime'+e+f).closest('div').attr("aria-checked", false);
+
+
+                $('#checkTime'+e+f).prop("checked",false)
+                $('#checkTime'+e+f).closest('div').removeClass("checked");  // tìm div gần nhất
+                $('#checkTime'+e+f).closest('div').attr("aria-checked", false);
+
+
+                       
+                $('#'+e+f).closest('div').removeClass("checked");  // tìm div gần nhất
+                $('#' +e+f).closest('div').attr("aria-checked", false); 
+                $('#' +e+f).attr("checked", false)
+              }
+              else{
+                // Khi check vào chọn time thì check cho parent
+              $('#' + e).closest('div').addClass("checked");  // tìm div gần nhất
+              $('#' + e).closest('div').attr("aria-checked", true); 
+              $('#' + e).attr("checked", true)
+
+              //  Khi check vào chọn time thì check cho child
+              $('#' + e+f).closest('div').addClass("checked");  // tìm div gần nhất
+              $('#' + e+f).closest('div').attr("aria-checked", true); 
+              $('#' + e+f).attr("checked", true)
+
+
+              $('#checkTime'+e+f).prop("checked",true)
+              $('#checkTime'+e+f).closest('div').addClass("checked");  // tìm div gần nhất
+              $('#checkTime'+e+f).closest('div').attr("aria-checked", true);        
+
+              $('#checkAllTime'+e+f).prop("checked",false)
+              $('#checkAllTime'+e+f).closest('div').removeClass("checked");  // tìm div gần nhất
+              $('#checkAllTime'+e+f).closest('div').attr("aria-checked", false);            
+              }
+              
+            }
+          });
+      }      
+    } 
+
+
+
+    function handlerr(e,f){
+      let adsId = $('#getidAds').val()  // id của quảng cáo
+      let adsPositionId = e + '|' + f 
+      let timeSellect = $('#inputTime' + e+f).val()
+      let timeSellectTo = $('#inputTimeTo' + e+f).val()      
+      let saveTime = $('#save' + e+f).val()
+      var timeFrom = $('#inputTime' + e+f).val()       
+      document.getElementById("inputTimeTo"+e+f).setAttribute('min', timeFrom); 
+      if(timeSellect){
+        $.ajax(
+          {
+            url: "/ads/checkPositionTime",    
+            method: "post",
+            data:
+            {              
+              adsId: adsId,
+              stringCheck: adsPositionId,
+              time: timeSellect,
+              timeTo: timeSellectTo               
+            },
+            success: function (res) {              
+              if(res != "Hợp lệ" && res.timePublish){
+                Swal.fire({
+                icon: 'error',            
+                text: "Đã có quảng cáo:"+' '+ res.nameAds+'(id='+ res.adsId+')'+ ' '+ "thời gian đặt:"+' '+res.timePublish+' '+"! Bạn vui lòng chọn lại!"      
+              })     
+                
+                $('#inputTime' + e+f).val('') 
+                $('#inputTimeTo' + e+f).val('')               
+              }
+              else if(res != "Hợp lệ" && !res.timePublish){
+                document.getElementById('inputTime'+e+f).value = ''
+                document.getElementById('inputTimeTo'+e+f).value = ''
+                Swal.fire({
+                icon: 'error',            
+                text: "Đã có quảng cáo:"+' '+ res.nameAds+'(id='+ res.adsId+')'+ ' '+ "đặt toàn bộ thời gian! Bạn vui lòng chọn lại!"     
+              })     
+                
+                $('#checkAllTime'+e+f).prop("checked",false)
+                $('#checkAllTime'+e+f).closest('div').removeClass("checked");  // tìm div gần nhất
+                $('#checkAllTime'+e+f).closest('div').attr("aria-checked", false);
+
+
+                $('#checkTime'+e+f).prop("checked",false)
+                $('#checkTime'+e+f).closest('div').removeClass("checked");  // tìm div gần nhất
+                $('#checkTime'+e+f).closest('div').attr("aria-checked", false);
+
+
+                       
+                $('#'+e+f).closest('div').removeClass("checked");  // tìm div gần nhất
+                $('#' +e+f).closest('div').attr("aria-checked", false); 
+                $('#' +e+f).attr("checked", false)
+              }
+              else{
+                // Khi check vào chọn time thì check cho parent
+              $('#' + e).closest('div').addClass("checked");  // tìm div gần nhất
+              $('#' + e).closest('div').attr("aria-checked", true); 
+              $('#' + e).attr("checked", true)
+              //  Khi check vào chọn time thì check cho child
+              $('#' + e+f).closest('div').addClass("checked");  // tìm div gần nhất
+              $('#' + e+f).closest('div').attr("aria-checked", true); 
+              $('#' + e+f).attr("checked", true)
+
+              $('#checkTime'+e+f).prop("checked",true)
+              $('#checkTime'+e+f).closest('div').addClass("checked");  // tìm div gần nhất
+              $('#checkTime'+e+f).closest('div').attr("aria-checked", true);   
+
+              $('#checkAllTime'+e+f).prop("checked",false)
+              $('#checkAllTime'+e+f).closest('div').removeClass("checked");  // tìm div gần nhất
+              $('#checkAllTime'+e+f).closest('div').attr("aria-checked", false);            
+              }              
+            }
+          });                       
+      }      
+    }     
+    
+
+    
+
+    
+
+    
+
+    

@@ -1,0 +1,22 @@
+mixin form(data={})
+  form#form-add-story(method='POST', action=(`/admin/ads/add`), role='form')
+    .col-lg-12.col-md-12
+      .form-group(class=errors && errors.desc && 'has-error')
+        label.control-label Tiêu đề:
+        .input-data-block
+          input.form-control(name='name' type='text' value=(data.name ? data.name : '') placeholder='Điền tiêu đề quảng cáo')
+    .col-lg-12.col-md-12
+      .form-group(class=errors && errors.desc && 'has-error')
+        label.control-label Tổ chức:
+        .input-data-block
+          input.form-control(name='organization' type='text' value=(data.organization ? data.organization : '') placeholder='Điền tên tổ chức')
+        
+    .col-lg-12.col-md-12(style="margin-top: 20px")
+      .form-group.right
+        button.btn.btn-success
+          |  Tạo quảng cáo
+
+  include ../../layouts/modal-upload
+ 
+  include _validation
+  include _jsformload

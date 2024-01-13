@@ -1,0 +1,13 @@
+mixin form(data={})
+  form#form-_table_generate_(method='POST', action=(`/admin/_table_generate_/${data.id ? 'edit/'+data.id : 'add'}`), role='form')
+    if (data.id)
+      input(type='hidden' name='id', value=data.id)
+    _form_content_text
+    .col-lg-12.col-md-12
+      .form-group
+        button.btn.btn-success
+          i.fa.fa-check
+          |  Submit
+    include ../../layouts/modal-upload
+  include _validation
+  include _jsformload

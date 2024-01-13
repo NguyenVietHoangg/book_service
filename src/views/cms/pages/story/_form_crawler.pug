@@ -1,0 +1,20 @@
+mixin form(data={})
+  form#form-story(method='POST', action=(`/admin/story/crawler_story`), role='form')
+    .col-lg-12.col-md-12
+      .form-group(class=errors && errors.desc && 'has-error')
+        label.control-label Link (truyenfull.vn|truyentr.org|truyenyy.vip||truyen.one||webtruyen.com||truyenngontinh18.com):
+        .input-data-block
+          input.form-control(name='link' type='text' placeholder='link')
+    .col-lg-12.col-md-12
+      .form-group
+        button.btn.btn-success#submit_crawler
+          i.fa.fa-check
+          |  Submit
+      <div class="loader" style="display: none;"></div>
+script.
+  $(function () {
+    $('#submit_crawler').click(function () {
+      $(this).hide()
+      $('.loader').show()
+    })
+  })

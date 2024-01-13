@@ -1,0 +1,106 @@
+#modal-default.modal.fade.in
+  .modal-dialog(style="width: 960px; margin: 30px auto;")
+    .modal-content
+      .modal-body
+        .categories-list(style="margin-bottom: 10px;")
+          .form-group
+            label Danh sách thể loại
+            select#category-id.form-control(onchange="loadStory()")
+              option(value='') Tất cả
+              each item, index in categories
+                option(value=item.id) !{item.name}
+        ul.nav.nav-tabs
+          li.active
+            a(href='#tab_1' data-toggle='tab' onclick="loadStory()") Danh sách
+          li
+            a(href='#tab_2' data-toggle='tab') Tìm kiếm
+        .tab-content
+          label#collection-name(for='auto-search')
+          #tab_1.tab-pane.active
+            .form-group
+              input#auto-search-in-collection.form-control(type='text' placeholder='Nhập tên tin tức')
+              input#collection-id(type="hidden" name="collectionId")
+            table.table.table-bordered#story-in-collection
+          #tab_2.tab-pane
+            .form-group
+              input#auto-search-story.form-control(type='text' placeholder='Nhập tên tin tức để tìm kiếm' autocomplete="off")
+              input#collection-id(type="hidden" name="collectionId")
+            table.table.table-bordered#story-list-search
+      .modal-footer
+        button.btn.btn-default(type='button' data-dismiss='modal') Close
+script.
+  $('#auto-search-story').keyup(function () {
+    loadSearch();
+  });
+
+  $('#auto-search-in-collection').keyup(function () {
+    loadStory();
+  });
+
+  function loadSearch() {
+    $.ajax({
+      url: '/admin/story/ajax-list?keySearch='+$('#auto-search-story').val(),
+      success: function (res) {
+        if (res.total) {
+          var list = [];
+          for(var i = 0; i < res.rows.length; i++) {
+            var text = '<span id="item-search-'+res.rows[i].id+'"><button type="button" class="btn bg-olive margin" onclick="addStory('+res.rows[i].id+')">'+res.rows[i].name+'</button></span>'
+            list.push(text);
+          }
+          $('#story-list-search').html(list.join(''))
+        } else {
+          $('#story-list-search').html('')
+        }
+      }
+    })
+  }
+
+  function loadStory() {
+    $.ajax({      
+      url: '/admin/story/ajax-list?collectionId='+$('#collection-id').val()+'&categoryId='+$('#category-id').val()+'&keySearch='+$('#auto-search-in-collection').val(),
+      success: function (res) {
+        //- console.log('res', res)
+        //- if (res.total) {
+        if (res.rows) {
+          var list = [];
+          for(var i = 0; i < res.rows.length; i++) {            
+            var text = '<span id="item-story-'+res.rows[i].id+'"><button type="button" class="btn bg-olive margin">'+res.rows[i].name+'</button><span class="btn bg-danger" onclick="removeStory('+res.rows[i].id+', '+res.rows[i].collections[0].id+')">x</span></span>'
+            list.push(text);
+            console.log("list",list)
+          }
+          
+          $('#story-in-collection').html(list.join(''))
+        } else {
+          $('#story-in-collection1').html('')
+        }
+      }
+    })
+  }
+  function addStory (id) {
+    $.ajax({
+      url: '/admin/collection/addstory',
+      method: 'post',
+      data: {
+        collectionId: $('#collection-id').val(),
+        storyId: id
+      },
+      success: function (res) {
+        $.notify("Success", { position:"bottom right", className: "success" });
+      }
+    })
+  }
+  
+  function removeStory (storyId, collectionId) {
+    $.ajax({
+      url: '/admin/collection/removestory',
+      method: 'delete',
+      data: {
+        collectionId: collectionId,
+        storyId: storyId
+      },
+      success: function (res) {
+        $.notify("Success", { position:"bottom right", className: "success" });
+        $('#item-story-'+storyId).remove();
+      }
+    })
+  }

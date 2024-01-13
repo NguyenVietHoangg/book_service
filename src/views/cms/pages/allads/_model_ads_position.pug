@@ -1,0 +1,69 @@
+#modal-default1.modal.fade.in
+  .modal-dialog(style="width: 960px; margin: 30px auto;")
+    .modal-content
+      .modal-body
+        span(style="font-size:20px") Danh sách các quảng cáo ở vị trí
+        | &nbsp;   
+        span.setPosition(style="font-size:20px;color:red")
+        br
+        br
+        table.table
+            thead
+                tr
+                    th
+                        | #
+                    th
+                        |Tên quảng cáo
+                    th
+                        | DateFrom
+                    th
+                        | DateTo
+                    th
+                        | Toàn thời gian
+                    th
+                        | Trạng thái 
+            tbody.getList
+            .col-lg-12.col-md-12
+        .form-group(class=errors && errors.desc && 'has-error')
+            label.control-label Tìm kiếm và Chèn thêm quảng cáo cho vùng này:
+            .input-data-block
+            input#auto-search-ads.form-control(name='keySearch' type='text' placeholder="Nhập tìm kiếm quảng cáo")
+        table.table.table-bordered#story-list-search    
+script.
+  $('#auto-search-ads').keyup(function () {
+    loadAds()
+  });
+  function loadAds() {
+    $.ajax({      
+      url: '/admin/ads/ajax-category-list?keySearch='+$('#auto-search-ads').val(),
+      success: function (res) {
+        if (res.total) {
+          var list = [];
+          for(var i = 0; i < res.rows.length; i++) {
+            var text = '<span id="item-search-'+res.rows[i].id+'"><button type="button" class="btn bg-olive margin" onclick="addAdsToRegion('+res.rows[i].id+')">'+res.rows[i].name+' | '+res.rows[i].organization+'</button></span>'
+            list.push(text);
+          }
+          $('#story-list-search').html(list.join(''))
+        } else {
+          $('#story-list-search').html('')
+        }
+      }
+    })
+  }
+
+  function addAdsToRegion (id) {
+    $.ajax({
+      url: '/admin/ads/add-ads-to-region',
+      method: 'post',
+      data: {
+        position: $('.setPosition').text(),
+        adsId: id
+      },
+      success: function (res) {
+        $.notify("Success", { position:"bottom right", className: "success" });
+        setPositionOrAds($('.setPosition').text())
+      }
+    })
+  }
+
+

@@ -1,0 +1,93 @@
+#myModalCate.modal
+  .modal-dialog
+    .modal-content
+      .modal-header
+        span.modal-title(style="font-size:20px") Chọn vị trí hiển thị trên &nbsp; 
+        span.namecategoryT(style="font-size:18px; color:red")                    
+        span.nametypeT(style="font-size:18px; color:red;text-transform: capitalize")    &nbsp;  
+        br
+        span.tborcollection(style="font-size:15px; color:blue; font-style:italic ")          
+      .modal-body        
+        input(id='idcategory' type='hidden') 
+        input(id='idcategoryandposition' type='hidden') 
+        input(id='nameclick' type='hidden')
+        input(id='positionC' type='hidden') 
+        input(id='storyid' type='hidden') 
+        input(id='publishdate' type='hidden' )
+        input(id='publishtime' type='hidden' )
+        .toan6(style = "text-align:center")         
+          button.btn.btn-success.btnpositioncate.changecolor(name='positioncate' value ='1' type='button' style="margin-left:15px; font-size:15px;background-color:green" ) 1
+          button.btn.btn-success.btnpositioncate.changecolor(name='positioncate' value ='2' type='button' style="margin-left:15px; font-size:15px;background-color:green") 2
+          button.btn.btn-success.btnpositioncate.changecolor(name='positioncate' value ='3' type='button' style="margin-left:15px; font-size:15px;background-color:green" ) 3  
+          button.btn.btn-success.btnpositioncate.changecolor(name='positioncate' value ='4' type='button' style="margin-left:15px; font-size:15px;background-color:green" ) 4
+          button.btn.btn-success.btnpositioncate.changecolor(name='positioncate' value ='5' type='button' style="margin-left:15px; font-size:15px;background-color:green") 5
+      .modal-footer
+        button.btn.btn-danger.btnapplyt( data-dismiss='modal' style="background-color:green") Apply
+        button.btn.btn-danger.btncancelt( data-dismiss='modal' style="background-color:red") Cancel
+script(type='text/javascript').
+    $('.btnpositioncate').on('click', function(){    
+      $('.tborcollection').text('')  
+      let x = document.querySelectorAll(".changecolor")       
+      for (i = 0; i < x.length; i++){
+        x[i].style.backgroundColor = "green"              
+      }
+      this.style.backgroundColor = "red" 
+      $('#pisitionT').val(this.value)        // vị trí  
+      let idcate = $('#idcategory').val()   // id cate 
+      let position = $('#pisitionT').val()        // vị trí 
+      let idstory = $('#storyid').val() // idstory
+      let publishdate = $('#publishdate').val() // idstory
+      let publishtime = $('#publishtime').val() // idstory
+      let name = $('#nameclick').val()   // name click 
+
+      
+      $.ajax(
+          {
+            url: "/Story/positioncheckcate",    
+            method: "post",
+            data:
+            {
+              positionCate: position,
+              idCate: idcate,
+              storyid: idstory,
+              datepublish: publishdate,
+              timepublish: publishtime,
+              nameclick: name
+            },
+            success: function (res) {              
+              if(res.nameStory && res.publishedAt) {
+                $('.tborcollection').append('Bài viết:'+' ' + res.nameStory + ',' + ' thời gian published:' + ' ' + res.publishedAt + ' ' + 'đang tồn tại')         
+              }                            
+            }
+          });
+
+    });
+
+    $('.btnapplyt').on('click', function(){ 
+      let name = $('#nameclick').val()
+      let x = document.querySelectorAll(".changecolor")      
+      for (i = 0; i < x.length; i++) {
+        x[i].style.backgroundColor = "green"              
+      }
+
+      let position = $('#pisitionT').val()        // vị trí 
+      
+      let idcate = $('#idcategory').val()   // id cate 
+      let idcategoryandposition = $('#idcategoryandposition').val() // 1|5|focus       
+      
+      let setString = idcate + '|' + position + '|' + name
+      $('#'+ name + idcate).val(setString)
+      
+      let stringP = '(' + position + ')' 
+      if(position){
+        $('#span'+ name + idcate).text(stringP)
+      }      
+      
+      
+    });
+    $('.btncancelt').on('click', function(){     
+      let x = document.querySelectorAll(".changecolor")      
+      for (i = 0; i < x.length; i++) {
+        x[i].style.backgroundColor = "green"          
+      }      
+    });

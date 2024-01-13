@@ -1,0 +1,40 @@
+mixin form(data={})
+  form#form_data(method='POST', action=(`/admin/adminstrator/${data.id ? 'edit/'+data.id : 'add'}`), role='form')
+    //- h3 #{JSON.stringify(datax.id)}
+    if (data.id)
+      input#id(type='hidden' name='id', value=data.id)
+    .col-lg-12.col-md-12
+      //- .form-group(class=errors && errors.desc && 'has-error')
+      //-   label.control-label Username: 
+      //-   .input-data-block
+      //-     input.form-control(name='username' type='text' value=(data.username ? data.username : '') placeholder='' readonly=(data.id ? true:  false))
+      //-   .col-lg-12.col-md-12
+      .form-group(class=errors && errors.email && 'has-error')
+        label.control-label Email: 
+        .input-data-block
+          input.form-control#email(name='email' type='text' value=(data.email ? data.email : '') placeholder='' readonly=(data.id ? true:  false))
+    .col-lg-12.col-md-12
+      .form-group(class=errors && errors.desc && 'has-error')
+        label.control-label Password:
+        input.form-control#password(name='password' type='text', value=(!data.id && data.password ? data.password : ''), placeholder='')
+    if data.id
+      .col-lg-12.col-md-12
+        .form-group
+          label Đổi Mật Khẩu
+            br
+            input.minimal(type='checkbox' name='isChangePassword')
+    .col-lg-12.col-md-12
+      .form-group
+        label.control-label Loại nhóm quyền : 
+        select.select2.form-control(name='grouproleId', autocomplete="off")
+          each group, index in groupRole 
+            option(value= group.id, selected= (data && data.grouproleId && data.grouproleId == group.id)? true : false, ) #{group.name}
+
+    .col-lg-12.col-md-12
+      .form-group
+        button.btn.btn-success
+          i.fa.fa-check
+          |  Submit
+    include ../../layouts/modal-upload
+  if !data.id
+    include _validation

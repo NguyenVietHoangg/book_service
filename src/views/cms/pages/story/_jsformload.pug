@@ -1,0 +1,576 @@
+block content
+  script(type='text/javascript').
+    $(function () {
+      //-   CKEDITOR.replace( 'editor1', {
+      //-     extraPlugins: 'codesnippet',
+      //-     codeSnippet_theme: 'monokai_sublime',
+      //-     height: 600, 
+      //-     allowedContent: true,
+      //-     contentsCss: '.helloworld { background-color:#C0C0C0;}.helloworld2 { background-color:#5555C0;}',
+      //-     docType: '<!DOCTYPE HTML>',
+      //-     toolbar: [
+      //-         { name: 'document', groups: [ 'mode', 'document', 'doctools' ], items: [ 'Source', '-', 'Save', 'NewPage', 'Preview', 'Print', '-', 'Templates' ] },
+      //-     { name: 'clipboard', groups: [ 'clipboard', 'undo' ], items: [ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ] },
+      //-     { name: 'editing', groups: [ 'find', 'selection', 'spellchecker' ], items: [ 'Find', 'Replace', '-', 'SelectAll', '-', 'Scayt' ] },
+      //-     { name: 'forms', items: [ 'Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton', 'HiddenField' ] },
+      //-     '/',
+      //-     { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ], items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat' ] },
+      //-     { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ], items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', ] },
+      //-     { name: 'links', items: [ 'Link', 'Unlink', 'Anchor' ] },
+      //-     { name: 'insert', items: [ 'Image', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak', 'Iframe' ] },
+      //-     '/',
+      //-     { name: 'styles', items: [ 'Styles'  ] },
+      //-     { name: 'tools', items: [ 'Maximize', 'ShowBlocks' ] },
+      //-     { name: 'others', items: [ '-' ] },
+      //-     { name: 'about', items: [ 'About' ] }
+      //-         ],
+      //-     stylesSet: [
+      //-         { name: 'Paragraph', element: 'p', attributes: { 'class': 'helloworld' } },
+      //-         { name: 'Paragraph2', element: 'p', attributes: { 'class': 'helloworld2' } },
+            
+      //-     ]
+      //-   } );
+      //- //bootstrap WYSIHTML5 - text editor
+      //- $('.textarea').wysihtml5()
+      // khởi tạo hoặc default biến, giá trị input bằng js
+      var s1 = $("#hashtags").select2({
+        minimumInputLength: 2,
+        tags: true,
+        data: hashtags
+      });
+      s1.val(hashtags).trigger("change")
+      $('#form-story .datepicker-story').datepicker({
+        autoclose: true,
+        format: "dd/mm/yyyy"
+      })
+      var currentDate = moment().format('DD/MM/YYYY')
+      //- $(".datepicker").datepicker( "setDate" , moment().format('DD/MM/YYYY'));
+      $('#form-story .reservation').daterangepicker()
+      $('#form-story .reservationtime').daterangepicker({ timePicker: true, timePickerIncrement: 30, locale: { format: 'DD/MM/YYYY hh:mm A' }})
+      $('#form-story .daterange-btn').daterangepicker(
+        {
+          ranges   : {
+            'Today'       : [moment(), moment()],
+            'Yesterday'   : [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Last 7 Days' : [moment().subtract(6, 'days'), moment()],
+            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+            'This Month'  : [moment().startOf('month'), moment().endOf('month')],
+            'Last Month'  : [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+          },
+          startDate: moment().subtract(29, 'days'),
+          endDate  : moment()
+        },
+        function (start, end) {
+          $('#daterange-btn span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
+        }
+      )
+      $('#form-story .timepicker-story').timepicker({
+        showInputs: false,
+      });
+
+      // Khởi tạo textarea
+      $('#form-story .summernote').summernote({
+        height: 800,   //set editable area's height
+        codemirror: { // codemirror options
+          theme: 'monokai',
+          lineWrapping: true
+        },
+        callbacks: { onImageUpload: function(files, editor, welEditable) {
+          //- console.log('files', files);
+          sendFile(files[0], editor, welEditable);
+          }
+        }
+      });
+
+      //- $('#story_relative_search').select2({
+      //-   templateResult: formatState,
+      //-   templateSelection: formatState,
+      //-   tags: true,
+      //-   minimumInputLength: 3,
+      //-   tokenSeparators: [','],
+      //-   //- createSearchChoice: function(term, data) {
+      //-   //-   console.log(term)
+      //-   //-   if ($(data).filter(function() {
+      //-   //-     return this.text.localeCompare(term) === 0;
+      //-   //-   }).length === 0) {
+      //-   //-     return {
+      //-   //-       id: term,
+      //-   //-       text: term
+      //-   //-     };
+      //-   //-   }
+      //-   //- },
+      //-   multiple: true,
+      //-   ajax: {
+      //-     url: '/admin/story/ajax-list?order=desc&keySearc='+$('#story_relative_search').val(),
+      //-     dataType: "json",
+      //-     data: function(term, page) {
+      //-       return {
+      //-         q: term
+      //-       };
+      //-     },
+      //-     results: function(data, page) {
+      //-       console.log(data)
+      //-       return {
+      //-         results: data
+      //-       };
+      //-     }
+      //-   },
+        
+      //- });
+      var s2 = $('#story_relative_search').select2({
+        placeholder: "These tags will apply to all lines",
+        minimumInputLength: 1,
+        tokenSeparators: [','],
+        data: suggestList,
+        ajax: {
+          url: '/admin/story/ajax-list-relative?order=desc&keySearch='+$('#story_relative_search').val(),
+          dataType: 'json',
+          delay: 250,
+          data: function (params) {
+            return {
+              q: params.term, // search term
+              page: params.page
+            };
+          },
+          processResults: function (data, params) { 
+            //- alert(1)
+            var datamod = data.rows.map(item => {id: item.id})
+            //- console.log('datamod', data.rows)
+            // parse the results into the format expected by Select2
+            // since we are using custom formatting functions we do not need to
+            // alter the remote JSON data, except to indicate that infinite
+            // scrolling can be used
+            params.page = params.page || 1;
+
+            //- var datamod = data.rows.map(item => {id: item.id})
+            //- console.log('datamod', mod)
+
+            return {
+              results: data.rows,
+              pagination: {
+                more: (params.page * 30) < data.total_count
+              }
+            };
+          },
+          //- cache: true
+        },
+        //- tags: true,
+        templateResult: formatRepo,
+        templateSelection: formatRepoSelection
+      });
+      
+      var vals = suggestList.map(item => item.id);
+      s2.val(vals).trigger("change")
+    });
+
+    var btnImage = '<div class="note-btn-group btn-group note-insert"><a class="btn btn-default" id="render-avatar" href="javascript:;" onclick="initUploadAws('+"'add-to-editor-2'"+')">Choose image &nbsp;<i class="fa fa-image"></i><input class="form-control" id="avatar2" name="avatar2" value="" type="hidden"></a></div>';
+    $(function () {
+      $('.note-toolbar').append(btnImage);
+    });
+
+    function sendFile(file, editor, welEditable) {
+      data = new FormData();
+      data.append("file", file);
+      $.ajax({
+        data: data,
+        type: "POST",
+        url: "/admin/media/add?type=form",
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function(res) {
+          // editor.insertImage(welEditable, url);
+          $('#form-story .summernote').summernote('editor.insertImage', res.link);
+        }
+      });
+    }
+
+    function formatRepo (repo) {
+      if (repo.loading) {
+        return repo.name;
+      }
+
+      var $container = $(
+        "<div class='select2-result-repository clearfix'>" +
+          "<div class='select2-result-repository__avatar'><img width='64px' height='46px' src='" + DOMAIN_IMG + '/' + repo.imageSave + "' /></div>" +
+          "<div class='select2-result-repository__meta'>" +
+            "<div class='select2-result-repository__title'></div>" +
+          "</div>" +
+        "</div>"
+      );
+      $container.find(".select2-result-repository__title").text(repo.name);
+      return $container;
+    }
+
+    function formatRepoSelection (repo) {
+      return repo.name || repo.slug;
+    }
+    
+
+    // thay đổi checkbox ở Thuộc bộ sưu tập 
+    $('.minimalcollection').on('ifChanged', function(){  
+      $('.tborcollection').text('')    
+      //- var idcollection = this.value 
+           
+      if(this.checked) 
+      {      
+        let idstory = $('#getidstory').val()     
+        $('#myModal').modal('show') 
+        $('#toan113').val(this.value)
+        var idCollection = $('#toan113').val()  
+        var idCollectionNew = idCollection.split('|')[0] // id của collection mà bài viết đang chọn        
+        $('#toan114').val(idCollectionNew)
+        
+        if(idCollectionNew == 4 ){          
+          $('.namecollection').text("Slide trang chủ")
+        }  
+        if (idCollectionNew == 5){
+          $('.namecollection').text("Tiêu điểm trang chủ")
+        } 
+        if(idCollectionNew == 6){
+          $('.namecollection').text("Tin mới nhất trang chủ")
+        }
+
+
+        $.ajax(
+          {
+            url: "/Story/checkpositioncollection",    
+            method: "post",
+            data:
+            {              
+              idCole: idCollectionNew,
+              storyid: idstory        
+              
+            },
+            success: function (res) {
+              if(res.position){
+                let stringP = '(' + res.position + ')'        
+                $('#span'+ idCollectionNew).text(stringP)  
+              }   
+              else{
+                $('#span'+ idCollectionNew).text('')  
+              }      
+              $('.list-story-collection-position').html(res.layoutList)
+            }
+          });
+      }
+      else
+      { 
+        let idCollection = this.value         
+        let idCollectionNew = idCollection.split('|')[0] // id của collection mà bài viết đang chọn              
+        $('#span'+ idCollectionNew ).text('')  
+        $('#myModal').modal('hide');
+      }
+
+
+      let idstory = $('#getidstory').val()        
+      $('#storyid').val(idstory)
+
+
+      let datepublish = $('#datepublish').val() 
+      $('#publishdate').val(datepublish)
+
+      let timepublish = $('#timepublish').val() 
+      $('#publishtime').val(timepublish)
+    });
+
+
+
+
+
+    // category possiton
+    $('.minimalcategory').on('ifChanged', function() {
+      $('.tborcollection').text('')  
+      let idstory = $('#getidstory').val()
+      if(this.checked) {
+        $('#myModalCate').modal('show')  
+        let idcate = this.value   // id category khi tích vô bất kì focus new slide        
+        $('#idcategory').val(idcate)
+        let name = this.name
+        if(name.includes('Focus')){
+          name = 'focus'
+        }
+        if(name.includes('Slide')){
+          name = 'slide'
+        }
+        if(name.includes('New')){
+          name = 'new'
+        }
+
+        $.ajax({
+          url: "/story/checkpositioncategory",    
+          method: "post",
+          data:
+          {              
+            idCate: idcate,
+            storyid: idstory,              
+            nameclick: name
+          },
+          success: function (res) { 
+            if(res.position) {
+              let stringP = '(' + res.position + ')'        
+              $('#span'+ name + idcate).text(stringP)    
+            }    
+            else{
+              $('#span'+ name + idcate).text('')    
+            }
+            $('.list-story-category-position').html(res.layoutList)
+          }
+        });
+        $('#nameclick').val(name)   
+        let title1 = document.getElementById(idcate).title;
+        let titleOk = title1.split(' ')
+        let titleOkk = titleOk.filter(item => item !== '') // lấy giá trị khác rỗng 
+        titleOkk.splice(0,6)
+        let titlechuan = titleOkk.join(' ')    // tên category in ra khi tích chọn focus *****************************
+        let idcateandposi = $('#'+ name + idcate).val()  
+        
+        $('#idcategoryandposition').val(idcateandposi)
+        $('.namecategoryT').text(titlechuan + "_") 
+        $('.nametypeT').text(name)
+        $('#categoryBig' + idcate).closest('div').addClass("checked");  // tìm div gần nhất
+        $('#categoryBig' + idcate).closest('div').attr("aria-checked", true); 
+        $('#categoryBig' + idcate).attr("checked", true)
+
+        $('#storyid').val(idstory)
+
+        let datepublish = $('#datepublish').val() 
+        $('#publishdate').val(datepublish)
+
+        let timepublish = $('#timepublish').val() 
+        $('#publishtime').val(timepublish)
+      } else {
+        console.log('false', this)  
+        let name = this.name
+        let namex = ''
+        if(name.includes('Focus')){
+          name = 'focus'
+          namex = 'Focus'
+        }
+        if(name.includes('Slide')){
+          name = 'slide'
+          namex = 'Slide'
+        }
+        if(name.includes('New')){
+          name = 'new'
+          namex = 'New'
+        }
+        let idcate = this.value   // id category khi tích vô bất kì focus new slide    
+
+        $.ajax({
+          url: "/story/checkpositioncategory",    
+          method: "post",
+          data:
+          {              
+            idCate: idcate,
+            storyid: idstory,              
+            nameclick: name
+          },
+          success: function (res) { 
+            if(res.position) {
+              var postionString = `${idcate}|${res.position}|${name}`
+              var newPosition = `${idcate}||${name}`
+              var values = $("input[name='categories"+namex+"AndPosition[]']").map(function(){return $(this).val();}).get();
+              console.log('x', values)
+              var index = values.indexOf(postionString)
+              if (index > -1) {
+                values[index] = newPosition
+              }
+              $("input[name='categories"+namex+"AndPosition[]']:eq("+index+")").val(newPosition);
+              var values = $("input[name='categories"+namex+"AndPosition[]']").map(function(){return $(this).val();}).get();
+            }                           
+          }
+        });
+        $('#span' + name + idcate ).text('')
+        $('#myModalCate').modal('hide')
+      }
+    });
+
+
+    $('#checkPublishedAt').on('ifChanged', function(){      
+      // nếu checkbox đc tích
+      if(this.checked) {
+        document.getElementById('showAndHidePublishedAt').style.display = 'block';
+        document.getElementById('showAndHidePublishedAt1').style.display = 'block';
+      }
+      // nếu bỏ checkbox
+      else{
+        //- $('#datepublish').val('')
+        //- $('#timepublish').val('')
+        document.getElementById('showAndHidePublishedAt').style.display = 'none';
+        document.getElementById('showAndHidePublishedAt1').style.display = 'none';
+      }
+    });
+
+
+    $('.checkLinkPostTo').on('ifChanged', function(){
+      let checkboxInput = document.querySelectorAll(".checkLinkPostTo")
+      let idCategoryParent = []     
+      for (i = 0; i < checkboxInput.length; i++){
+        if(checkboxInput[i].checked == true){
+          let valueCurrent = checkboxInput[i].defaultValue
+          if(valueCurrent.includes('|')){
+            let categoryIdParent = valueCurrent.split('|')[0]
+            idCategoryParent.push(categoryIdParent)            
+          }
+          else{
+            let categoryIdParent = valueCurrent
+            idCategoryParent.push(categoryIdParent)
+          }          
+        }        
+      }  
+      let idGetSlug = idCategoryParent[0] 
+      //slugCategory hiện tại
+      let slugCategory = $('#getSlug'+idGetSlug).val()
+      let nameCategory = $('#getNameCategory'+idGetSlug).val()      
+      $('#saveSlugCategory').val(slugCategory)
+      $('#saveNameCategory').val(nameCategory)
+      console.log(nameCategory)
+      
+
+
+
+      // config linkTong 
+      let formart = $('#saveFormart').val()
+      // lưu firstCate
+      let firstCate = $('#saveSlugCategory').val()
+      let slugStory = $('#saveSlugStory').val()
+      let idStory = $('#saveStoryId').val()
+      let string = firstCate +'/'+ slugStory +'-'+idStory + '.html'
+      $('#saveLinkTong').val(string)
+
+
+      // đổi tên luôn
+      let inputText = document.querySelectorAll(".daysang") 
+      //- console.log(inputText)     
+      for (j = 0; j < inputText.length; j++){        
+        if(inputText[j].checked == true){
+          let idChange = inputText[j].defaultValue.split('|')[0]
+          let formart = inputText[j].defaultValue.split('|')[1]
+          let endLink = $('#saveLinkTong').val()
+          $('#' + idChange).val(formart + '/' +endLink)
+          $('#linknguon').val(formart + '/' +endLink)
+          $('.linkPostButton').attr("href",formart + '/' +endLink)
+        }        
+      }
+    });
+
+    function RemoveLink(){     
+      $('#linknguon').val('')
+      $('#nguon').val('')
+      //- $('.inputdaysang').val('')      
+      $('.daysang').prop("checked", false); 
+      $('.daysang').closest('div').removeClass("checked");  // tìm div gần nhất
+      $('.daysang').closest('div').attr("aria-checked", false);    
+      //- $('inputdaysang').style.display = 'none';             
+      let inputDaySang = document.querySelectorAll(".inputdaysang")      
+      for (j = 0; j < inputText.length; j++){ 
+        inputDaySang[j].style.display = 'none'        
+      }       
+    }
+
+
+    
+
+    function PreviewStory(){ 
+      //- NamefirseCate
+      let nameCategory =''
+      let saveNameCate = $('#saveNameCategory').val()
+      if(saveNameCate){
+        nameCategory = $('#saveNameCategory').val()
+      }
+      else{
+        let checkboxInput = document.querySelectorAll(".checkLinkPostTo")
+        let idCategoryParent = []     
+        for (i = 0; i < checkboxInput.length; i++){
+          if(checkboxInput[i].checked == true){
+            let valueCurrent = checkboxInput[i].defaultValue
+            if(valueCurrent.includes('|')){
+              let categoryIdParent = valueCurrent.split('|')[0]
+              idCategoryParent.push(categoryIdParent)            
+            }
+            else{
+              let categoryIdParent = valueCurrent
+              idCategoryParent.push(categoryIdParent)
+            }          
+          }        
+        } 
+        let idGetSlug = idCategoryParent[0]        
+        nameCategory = $('#getNameCategoryIndex'+idGetSlug).val()        
+      }   
+      
+      
+
+      // lấy bài viết liên quan 
+      let storyRelative = $('.getRelative').val() // mảng     
+      // id story
+      let idStory = $('#saveStoryId').val()      
+      // tiêu đề   
+      let title = $('.getTitle').val()
+      // tác giả
+      let author = $('.getAuthor').val()
+      let time = $('#timepublish').val()      
+      let date = $('#datepublish').val()
+      // ngày đăng
+      let publishedAt = time + ' ' + date
+      // mô tả ngắn 
+      let sapo = $('.getSapo').val()
+      // nội dung bài viết 
+      let description = $('.getDescription').val()
+      let rate = $('.getRate').val()
+      let state = $('.getState').val()
+      let genre = $('.getGenre').val()
+      // nguồn
+      let nguon = $('#nguon').val()     
+      // link nguồn 
+      let linkNguon = $('#linknguon').val()
+      let imageSave = $('#imageSave').val()
+      $.ajax(
+          {
+            url: "/Story/saveSessionOrStory",    
+            method: "post",
+            data: {
+              title: title,
+              author: author,
+              publishedAt: publishedAt,
+              sapo: sapo,
+              description: description,
+              nguon: nguon,
+              linknguon: linkNguon,
+              idStory: idStory,
+              storyRelative: storyRelative,
+              nameCategory: nameCategory,
+              imageSave: imageSave,
+              state: state,
+              rate: rate,
+              genre: genre,
+            },
+            success: function (res) {              
+              //-  window.open("/admin/story/previewstory")              
+            }
+          });      
+    }
+      //- let slug = $('.getSlug').val()
+      
+      //- let nameDaySang = ''
+      //- // tìm tên đối tác đẩy link
+      //- let checkboxDaySang = document.querySelectorAll(".daysang")
+      //- for (j = 0; j < checkboxDaySang.length; j++){        
+      //-   if(checkboxDaySang[j].checked == true){
+      //-     nameDaySang = checkboxDaySang[j].defaultValue.split('|')[0]
+      //-   }
+      //- }
+      //- // end tìm tên đối tác 
+      
+
+
+       
+    
+
+    
+
+    
+
+    
+
+    

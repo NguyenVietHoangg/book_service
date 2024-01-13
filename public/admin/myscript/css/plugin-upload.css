@@ -1,0 +1,43 @@
+.selected-img{
+	border: 2px rgb(255, 72, 0) solid !important;
+}
+
+.img-cus {
+    width: 48px;
+    height: 32px;
+    /* border: 1px rgb(136, 136, 136) solid; */
+    border-radius: 2px;
+    margin: 4px;
+}
+.img-cus:hover {
+    /* width: 240px;
+    height: 180px; */
+    /* zoom: 3 */
+}
+.modal-dialog{
+    overflow-y: initial !important;
+}
+*/
+.modal-body.modal-upload{
+    height: 700px;
+    overflow-y: auto;
+}
+
+.tabtab.active {
+    background-color: rgb(219, 148, 32) !important;
+}
+
+
+.loader {
+    border: 16px solid #f3f3f3; /* Light grey */
+    border-top: 16px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 2s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }

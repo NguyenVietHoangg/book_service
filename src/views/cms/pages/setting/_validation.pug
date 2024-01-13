@@ -1,0 +1,52 @@
+block content
+  script(type='text/javascript').
+    $(function () {
+      
+      $( "#form_data" ).validate({
+        rules: {
+          type: 'required',
+          name: 'required'
+        },
+        messages: {
+          type: 'Please insert type',
+          name: 'Please insert name'
+        },
+        errorElement: "em",
+        errorPlacement: function ( error, element ) {
+          error.addClass( "help-block" );
+          if ( element.prop( "type" ) === "checkbox" ) {
+            error.insertAfter( element.parent( "label" ) );
+          } else {
+            error.insertAfter( element );
+          }
+        },
+        highlight: function ( element, errorClass, validClass ) {
+          $( element ).parents( ".input-data-block" ).addClass( "has-error" ).removeClass( "has-success" );
+        },
+        unhighlight: function (element, errorClass, validClass) {
+          $( element ).parents( ".input-data-block" ).addClass( "has-success" ).removeClass( "has-error" );
+        },
+        submitHandler: function(form) {
+          const id = $('#id').val() ? $('#id').val() : null
+          if ($('.summernotex').summernote('codeview.isActivated')) {
+            $('.summernotex').summernote('codeview.deactivate'); 
+          }
+          //- $('.content_data').val($(".summernotex").val())
+          updateForm(form,id)
+        }
+      });
+      $('.summernotex').summernote({
+          callbacks: {
+              onInit: function() {
+                  $('.summernotex').summernote('codeview.activate');
+              }
+          },
+          height: 600,
+          codemirror: { // codemirror options
+            theme: 'monokai',
+            htmlMode: true,
+            lineNumbers: true,
+            mode: 'text/html'
+          }
+      });
+    })

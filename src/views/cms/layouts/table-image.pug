@@ -1,0 +1,21 @@
+.box
+  .box-body
+    .row
+      .col-lg-12.col-md-12
+        .row#box-filter
+          .col-lg-6.col-md-6
+            label Tìm theo tên ảnh
+            .form-group
+              input#search.form-control(type='text' placeholder='Tên ảnh...' name='search')
+          .col-lg-2.col-md-2
+            .form-group
+              button#filter.btn.btn-primary(type='button' style='margin-top: 25px;')
+                i.fa.fa-filter
+                |  Lọc
+        table#table(data-buttons-toolbar='.buttons-toolbar' data-toolbar-align='unset' data-search='false' data-icons-prefix='fa' data-show-refresh='false' data-show-toggle='false' data-show-columns='true' data-show-export='true' data-detail-view='false' data-detail-formatter='detailFormatter' data-minimum-count-columns='2' data-show-pagination-switch='false' data-pagination='true' data-id-field='id' data-page-list='[30]' data-show-footer='false' data-side-pagination='server' data-url='/admin/media/ajax-list' data-query-params='queryParams' data-response-handler='responseHandler')
+script.
+  var fields = [{field: 'path', formatter: 'imageFormatter', align: 'center'}, {field: 'name',title:'Tên ảnh'}];
+  var urlManager = '/admin/media';
+  var disableLoad = true;
+  var setLimitRow = 5;
+include tablejs

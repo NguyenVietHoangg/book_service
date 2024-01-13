@@ -1,0 +1,164 @@
+.button-manager {
+  margin-right: 5px !important;
+}
+
+.ul-btn {
+  list-style-type: none;
+  margin-right: 0px;
+  /* position: absolute; */
+  right: 9px;
+  margin-top: -14px;
+}
+
+.ul-btn li {
+  float: left;
+  margin-right: 5px;
+}
+
+.ul-btn li a {
+  display: block;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+}
+
+.has-error .form-control, {
+  border-color: #a94442;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+}
+
+.has-error .checkbox, .has-error .checkbox-inline, .has-error .control-label, .has-error .help-block, .has-error .radio, .has-error .radio-inline, .has-error.checkbox label, .has-error.checkbox-inline label, .has-error.radio label, .has-error.radio-inline label {
+  color: #a94442 !important;
+}
+
+.help-block {
+  display: block;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  color: #a94442 !important;
+}
+
+.edit-item-menu-fix {
+  padding: 10px ;
+}
+
+.input-group-append .caret {
+  display: none;
+}
+
+.btn-img-view {
+  width: 100%;
+  float: left;
+  padding: 25px 0 5px 0;
+  /* border: solid 1px rgb(97, 122, 97); */
+  border-radius: 5px;
+}
+
+.img-colorbox {
+  float: left !important;
+}
+
+.axz {
+  position: relative;
+  display: inline-block;
+}
+.icon-hihi {
+  position: absolute;
+  left: 89%;
+  top: -2%;
+  color: #ffff;
+  background-color: #462210;
+  display: none;
+}
+.icon-hihi.open{
+  display: block;
+}
+.edit-region-image {
+  position: absolute;
+  right: 5%;
+  top: 10%;
+  border-radius: 5px;
+  /* zoom: 2; */
+}
+
+.edit-region-image:hover{
+  cursor: pointer;
+}
+
+.btn-img-view .img-preview{
+  display: none;
+}
+
+.mimiinput {
+  margin-left: 5px;
+}
+
+
+.loading-upload {
+    background: url(/assets/ajax-loader.gif) no-repeat;
+    background-color: #cccccc;
+    width: 128px;
+    height: 16px;
+    margin: 0px auto;
+    text-align: center;
+}
+
+.treeview-menu .active {
+  background: #5cb85c;
+}
+
+.select2 {
+  width:100%!important;
+}
+
+#sport-area a.btn, #type-area a.btn, #kind-area a.btn {
+  padding: 22px !important;
+  margin: 10px 0 !important;
+}
+
+#sport-area a.btn-active{
+  background: #007A42;
+}
+
+#type-area a.btn-active{
+  background: #2F6D90;
+}
+
+#kind-area a.btn-active{
+  background: #AA6D0D;
+}
+
+.widget-user .widget-user-image>img {
+  height: 90px !important;
+}
+.widget-user .box-footer {
+  background-color: #cccccc;
+}
+.inline-block-cate {
+  display: inline-block;
+  width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: 21px;
+  line-height: 21px;
+}
+.inline-block-cate.parent {
+  width: 140px;
+}
+.inline-block-cate.children {
+  width: 90px;
+}
+
+.anchor-button {
+  margin-top: 20px;
+  position: fixed;
+  bottom: 9px;
+  width: 300px;
+  left: 42%;
+  background: #0000009c;
+  padding: 17px 13px 1px 18px;
+  border-radius: 10px;
+  z-index: 999999;
+}
+

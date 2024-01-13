@@ -1,0 +1,25 @@
+block content
+  script(type='text/javascript').
+    $(function () {
+      // phần này sẽ là validation cơ bản cho các input của form
+      _plugin_ready_on_load
+      $( "#form-_table_generate_" ).validate({
+        rules: _rules_validate_load,
+        messages: _msg_validate_load,
+        errorElement: "em",
+        errorPlacement: function ( error, element ) {
+          error.addClass( "help-block" );
+          if ( element.prop( "type" ) === "checkbox" ) {
+            error.insertAfter( element.parent( "label" ) );
+          } else {
+            error.insertAfter( element );
+          }
+        },
+        highlight: function ( element, errorClass, validClass ) {
+          $( element ).parents( ".input-data-block" ).addClass( "has-error" ).removeClass( "has-success" );
+        },
+        unhighlight: function (element, errorClass, validClass) {
+          $( element ).parents( ".input-data-block" ).addClass( "has-success" ).removeClass( "has-error" );
+        }
+      });
+    })

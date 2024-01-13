@@ -1,0 +1,33 @@
+mixin form(data={})
+  form#form_data(method='POST', action=(`/admin/groupRole/${data.id ? 'edit/'+data.id : 'add'}`), role='form')
+    if (data.id)
+      input#id(type='hidden' name='id', value=data.id)
+    .col-lg-6.col-md-6
+      .form-group(class=errors && errors.desc && 'has-error')
+        label.control-label Tên nhóm quyền:
+        .input-data-block
+          if (!data.id)
+            input.form-control(name='name' type='text' value=(data.name ? data.name : '') placeholder='name')
+          else 
+            input.form-control(name='name' type='text' value=(data.name ? data.name : '') placeholder='name' disabled)
+    .col-lg-12.col-md-12#permission_list
+      .form-group
+        label.control-label Danh sách quyền :
+          br
+          .row
+          each per in permissions
+            .col-lg-3.col-md-3
+              input.minimal(type='checkbox' name='permissions' value=per.id checked=data && data.pers && data.pers.includes(per.id)?true:false)
+              label &nbsp #{per.method} #{per.name}
+    .col-lg-12.col-md-12(style='display: none')
+      .form-group
+        label.control-label Type:
+        select.select2.form-control(name='type' autocomplete="off")
+            option(value='custom') custom
+
+    .col-lg-6.col-md-6
+      .form-group
+        button.btn.btn-success
+           | #{data.id ? "Cập nhật" : "Tạo mới"}
+    include ../../layouts/modal-upload
+  include _validation

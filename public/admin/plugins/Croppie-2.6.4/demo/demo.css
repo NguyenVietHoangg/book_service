@@ -1,0 +1,328 @@
+/* 
+Colors
+#20C1C7
+#204648
+#189094
+#61CED2
+#0C4648
+*/
+/* html,
+body {
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    font-size: 14px;
+    color: #222;
+    min-height: 100%;
+    height: auto;
+}
+
+body,
+button,
+input {
+    font-family: 'Open Sans', sans-serif;
+}  */
+
+#choose-mylibrary, #choose-mycomputer, #choose-myurl {
+    margin: 0 2px;
+}
+
+#wrap-upload h1 {
+    font-size: 42px;
+    font-weight: 300;
+    padding-top: 30px;
+    margin: 15px 0;
+}
+#wrap-upload h3 {
+    font-size: 18px;
+    font-weight: 400;
+    border-bottom: 1px solid #0C4648;
+    margin: 15px 0 10px;
+}
+#wrap-upload nav {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding:15px;
+}
+
+#wrap-upload nav a {
+    color: white;
+    text-decoration: none;
+    padding: 0 10px;
+}
+
+#wrap-upload footer {
+    text-align: center;
+    color: #555;
+    font-size: 12px;
+    padding: 5px;
+}
+
+section {
+    margin-bottom: 25px;
+}
+
+#wrap-upload section.hero {
+    background: #20C1C7;
+    background: linear-gradient(#189094, #20C1C7);
+    color: white;
+    text-shadow: 0 1px 1px rgba(20,20,20,0.6);
+    margin-bottom: 0;
+    min-height: 450px;
+}
+#wrap-upload .hero h2 {
+    font-size: 16px;
+    font-weight: 400;
+}
+
+#wrap-upload section.who {
+    margin-bottom: 30px;
+}
+#wrap-upload .section-header {
+    background: #204648;  
+    padding: 5px 0;
+}
+
+/* input[type="number"],
+input[type="text"] {
+    border: 1px solid #aaa;
+    padding: 5px;
+    font-size: 18px;
+    width: 100px;
+} */
+
+#wrap-upload button,
+#wrap-upload a.btn {
+    background-color: #189094;
+    color: white;
+    /* padding: 10px 15px; */
+    border-radius: 3px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    font-size: 16px;
+    cursor: pointer;
+    text-decoration: none;
+    text-shadow: none;
+    display: inline-block;
+    cursor: pointer;
+}
+#wrap-upload input[type="file"] {
+    cursor: pointer;
+}
+#wrap-upload button:focus {
+    outline: 0;
+}
+
+#wrap-upload .file-btn {
+    position: relative;
+}
+#wrap-upload .file-btn input[type="file"] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+}
+
+#wrap-upload .actions {
+    padding: 5px 0;
+}
+#wrap-upload .actions button {
+    margin-right: 5px;
+}
+
+#wrap-upload pre[class*="language"] {
+    margin: 10px 0;
+    padding-top: 0;
+    border-left-color: #189094;
+}
+
+#wrap-upload .container,
+#wrap-upload .section-header h2 {
+    position: relative;
+    max-width: 1000px;
+    margin: 0 auto;
+    min-width: 500px;
+    padding: 0 10px;
+}
+
+#wrap-upload .hero p {
+    font-size: 16px;
+}
+
+#wrap-upload .hero .grid {
+    padding-top: 50px;
+}
+
+#wrap-upload h2 {
+    color: white;
+    font-size: 23px;
+    font-weight: 300;
+}
+
+#wrap-upload .demo-wrap {
+    border-bottom: 1px solid #ddd;
+    padding-top: 20px;
+}
+
+#wrap-upload .demo-wrap .container {
+    padding-bottom: 10px;
+}
+
+#wrap-upload .demo-wrap strong {
+    font-size: 16px;
+    display: block;
+    font-weight: 400;
+    color: #aaa;
+    margin: 0 0 5px 0;
+}
+
+#wrap-upload .documentation ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#wrap-upload .documentation section > ul > li {
+    margin-bottom: 1.5em;
+}
+
+#wrap-upload .documentation p {
+    margin: 5px 0 10px;
+}
+
+#wrap-upload .documentation .parameter-list li {
+    padding-left: 5px;
+    line-height: 28px;
+}
+#wrap-upload .documentation .parameter-list li.values {
+    padding-left: 20px;
+}
+#wrap-upload .documentation em {
+    color: #aaa;
+    font-style: normal;
+    padding: 0 10px;
+}
+#wrap-upload .documentation i {
+    color: #666;
+}
+
+#wrap-upload .documentation strong.focus {
+    font-size: 18px;
+    color: #189094;
+    font-weight: 700;
+}
+#wrap-upload .documentation span.default {
+    padding-right: 10px;
+    font-weight: 600;
+    color: #777;
+}
+
+#wrap-upload .important-notes article {
+    margin-bottom: 2em;
+}
+
+#wrap-upload .upload-demo .upload-demo-wrap,
+#wrap-upload .upload-demo .upload-result,
+#wrap-upload .upload-demo.ready .upload-msg {
+    display: none;
+}
+#wrap-upload .upload-demo.ready .upload-demo-wrap {
+    display: block;
+}
+#wrap-upload .upload-demo.ready .upload-result {
+    display: inline-block;    
+}
+#wrap-upload .upload-demo-wrap {
+    width: 300px;
+    height: 300px;
+    margin: 0 auto;
+}
+
+#wrap-upload .upload-msg {
+    text-align: center;
+    padding: 50px;
+    font-size: 22px;
+    color: #aaa;
+    width: 260px;
+    margin: 50px auto;
+    border: 1px solid #aaa;
+}
+
+/* Sweet alert modifications */
+#wrap-upload .sweet-alert {
+    width: auto;
+    max-width: 85%;
+}
+
+/* Grid - subset */
+*, *:after, *:before {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+[class*='col-'] {
+	float: left;
+	padding-right: 20px; /* column-space */
+}
+
+#wrap-upload .grid {
+	width: 100%;
+	max-width: 1140px;
+	min-width: 755px;
+	margin: 0 auto;
+	overflow: hidden;
+}
+#wrap-upload .grid:after {
+	content: "";
+	display: table;
+	clear: both;
+}
+
+#wrap-upload .col-1-2 {
+	width: 50%;
+}
+
+#wrap-upload .col-1-3 {
+	width: 33.33%;
+}
+#wrap-upload .col-2-3 {
+	width: 66.66%;
+}
+#wrap-upload .col-1-4 {
+	width: 25%;
+}
+#wrap-upload .col-3-4 {
+	width: 75%;
+}
+
+@media handheld, only screen and (max-width: 767px) {
+    #wrap-upload .grid {
+        width: 100%;
+        min-width: 0;
+        margin-left: 0;
+        margin-right: 0;
+        padding-left: 20px; /* grid-space to left */
+        padding-right: 10px; /* grid-space to right: (grid-space-left - column-space) e.g. 20px-10px=10px */
+    }
+
+    [class*='col-'] {
+        width: auto;
+        float: none;
+        margin: 10px 0;
+        padding-left: 0;
+        padding-right: 10px; /* column-space */
+    }
+    #wrap-upload .container, 
+    #wrap-upload .section-header h2 {
+        min-width: 0;
+    }
+
+    #wrap-upload .croppie-container {
+        padding: 30px 0;
+    }
+}
