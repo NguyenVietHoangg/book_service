@@ -1,6 +1,6 @@
 
 import * as Model from "../../database/models";
-import { signToken } from "../../helpers/jwtToken";
+import { signToken, validToken } from "../../helpers/jwtToken";
 export const getUserLogin = async (data) => {
   // const { email, password } = data;
   const email = data.data.email;
@@ -23,6 +23,10 @@ export const getUserLogin = async (data) => {
   const token = await signToken({ id: user.id, name: user.name, grouproleid : user.grouproleId });
   return { status: 200, message: token };
 };
+export const getUserLogout = async (data) =>  {
+  res.clearCookie('');
+  return { status: 200, message: "okii" };
+}
 export default {
   getUserLogin,
 };

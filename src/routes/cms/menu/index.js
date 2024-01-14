@@ -8,6 +8,10 @@ router.post(`/menu`, async (req, res) =>{
     const token = req.header('Authorization');
     const groupRoleID = decodeToken(token).grouproleid
     const data = await menu.getMenuList(groupRoleID)
-    res.end(_e._successJson(SUCCESS, data))
+    res.end(_e._successMenu(SUCCESS, data))
+  })
+  router.post(`/setmenu`, async (req, res) =>{
+    const data = await menu.setMenuList(req.body)
+    res.end(_e._successMenu(SUCCESS, data))
   })
   export default router

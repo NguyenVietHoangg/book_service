@@ -9,6 +9,12 @@ router.post("/login", async (req, res) => {
 
   res.status(data.status).json({ code: data.status, message: data.message });
 });
+router.post("/logout", async (req, res) => {
+  const conds = req.body.data;
+  const data = await user.getUserLogout(conds);
+
+  res.status(data.status).json({ code: data.status, message: data.message });
+});
 
 
 export default router;

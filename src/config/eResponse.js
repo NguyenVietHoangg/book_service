@@ -126,3 +126,9 @@ export const _errorByHandJSon = (
     msg: message || `Có lỗi xảy ra, vui lòng quay lại sau`,
     data: res,
   });
+  export const _successMenu = (message = "Thành công", res = null) =>
+  JSON.stringify({
+    code: 200,
+    message: message || "Thành công",
+    data: res,
+  });

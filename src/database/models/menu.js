@@ -11,21 +11,9 @@ module.exports = (Sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       defaultValue: null
     },
-    parentMenuId: {
-      type: DataTypes.INTEGER,
-      defaultValue: null
-    },
-    name: {
-      type: DataTypes.STRING,
-      defaultValue: null,
-      unique: true
-    },
-    icon: {
-      type: DataTypes.STRING(500),
-      defaultValue: null
-    },
-    url: {
-      type: DataTypes.STRING(500),
+    
+    desc: {
+      type: DataTypes.TEXT,
       defaultValue: null
     },
     type: {

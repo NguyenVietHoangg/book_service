@@ -11,9 +11,8 @@ import { permissionGroups } from "../config/premissons";
 
 export const signToken = (data) => {
   console.log(data);
-  return data ? jwt.sign(data, JWT_SECRET, { expiresIn: "1h" }) : null;
+  return data ? jwt.sign(data, JWT_SECRET, { expiresIn: "24h" }) : null;
 };
-
 export const decodeToken = (token) => {
   try {
     return jwt.verify(token, JWT_SECRET) || null;
