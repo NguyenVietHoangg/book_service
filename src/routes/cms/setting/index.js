@@ -17,6 +17,10 @@ router.post(`/setting/saveSettingAppInfo`, async (req, res) =>{
   const data = await settingSv.saveSettingAppInfo(conds, page)
   res.end(_e._successJson(SUCCESS, data))
 })
+router.post(`/setting/getPermissionList`, async (req, res) =>{
+  const data = await settingSv.getPermissionList()
+  res.end(_e._successMenu(SUCCESS, data))
+})
 
 
 export default router

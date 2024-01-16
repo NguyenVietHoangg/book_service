@@ -48,11 +48,16 @@ module.exports = (Sequelize, DataTypes) => {
     },
     updatedAt: {
       type: DataTypes.DATE
-    }
+    },
+
+
   }, {});
-  permission.associate = function(models) {
-    // associations can be defined here
-    // grouprole.belongsToMany(models.story, { through: 'grouprole_has_permission', sourceKey: 'id', foreignKey: 'groupId' })
+ // const grouprole_has_permission = require("./grouprole_has_permission")
+ 
+ 
+ permission.associate = function(models) {
+    //associations can be defined here
+    //permission.belongsTo(models.grouprole_has_permission, {  foreignKey: 'permissionId' })
 
   };
   return permission;

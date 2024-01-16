@@ -41,7 +41,8 @@ module.exports = (Sequelize, DataTypes) => {
     }
   }, {});
   grouprole.associate = function(models) {
-    grouprole.belongsToMany(models.permission, { through: 'grouprole_has_permission', sourceKey: 'id', foreignKey: 'groupId' })
+    //grouprole.belongsToMany(models.permission, { through: 'grouprole_has_permission', sourceKey: 'id', foreignKey: 'groupId' })
+    //grouprole.hasMany(models.grouprole_has_permission, { foreignKey: 'groupId' });
   };
   return grouprole;
 };

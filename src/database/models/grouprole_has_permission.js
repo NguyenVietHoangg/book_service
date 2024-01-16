@@ -35,9 +35,10 @@ module.exports = (Sequelize, DataTypes) => {
       type: DataTypes.DATE
     }
   }, {});
+  
   grouprole_has_permission.associate = function(models) {
     // associations can be defined here
-
+   
   };
   return grouprole_has_permission;
 };
