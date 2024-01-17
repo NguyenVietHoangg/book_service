@@ -75,3 +75,6 @@ export const INVALID_PHONE_CUSTOMER = 'Số điện thoại khách hàng không 
 //upload fail
 export const UPLOAD_FAILD = 'Upload file không thành công'
 export const NOT_EXIST_FILE = 'Vui lòng chọn file để upload'
+
+
+

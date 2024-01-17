@@ -12,6 +12,12 @@ router.post(`/menu`, async (req, res) =>{
   })
   router.post(`/setmenu`, async (req, res) =>{
     const data = await menu.setMenuList(req.body)
-    res.end(_e._successMenu(SUCCESS, data))
+    if(data){
+      res.end(_e._successMenu(SUCCESS, data))
+    }
+    else{
+      res.end(_e._errorMenu(ERROR, data))
+    }
+   
   })
   export default router

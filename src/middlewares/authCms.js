@@ -60,11 +60,11 @@ export const checkRole = async (req, res, next) => {
         next();
       } else {
           console.error('Invalid permission');
-          return res.sendStatus(403);
+          return res.send(eResponse._errorPermission(INVALID_PREMISSION));
       }
   } catch (error) {
       console.error('Error while checking role:', error);
-      return res.sendStatus(500);
+      return res.send(eResponse._errorPermission(INVALID_PREMISSION));
   }
 };
 // const checkRole = (req) => {
