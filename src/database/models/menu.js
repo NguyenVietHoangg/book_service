@@ -11,7 +11,6 @@ module.exports = (Sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       defaultValue: null
     },
-    
     desc: {
       type: DataTypes.TEXT,
       defaultValue: null

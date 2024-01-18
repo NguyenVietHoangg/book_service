@@ -13,21 +13,8 @@ module.exports = {
         defaultValue: null,
         allowNull: true
       },
-      parentMenuId:{
-        type: Sequelize.INTEGER,
-        defaultValue: null,
-      },
-      name: {
-        type: Sequelize.STRING,
-        defaultValue: null,
-        unique: true
-      },
-      icon: {
-        type: Sequelize.STRING(500),
-        defaultValue: null
-      },
-      url: {
-        type: Sequelize.STRING(500),
+      desc: {
+        type: DataTypes.TEXT,
         defaultValue: null
       },
       type: {
